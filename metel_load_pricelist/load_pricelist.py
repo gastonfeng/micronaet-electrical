@@ -38,4 +38,21 @@ from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
 
 _logger = logging.getLogger(__name__)
 
+class MetelBase(orm.Model):
+    """ Model name: MetelBase
+    """
+    
+    _inherit = 'metel.base'
+    
+    def schedule_import_pricelist_action(self, cr, uid, context=None):
+        ''' Schedule import of pricelist METEL
+        '''
+        return True
+        
+    _columns = {
+        'root_data_folder': fields.char('Root folder', size=120, 
+            help='~(.filestore/metel'),
+        'root_history_folder': fields.char('History folder', size=120,
+            help='~(.filestore/metel/history'),
+        }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
