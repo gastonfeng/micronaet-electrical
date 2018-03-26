@@ -51,8 +51,10 @@ class MetelBase(orm.Model):
         
     _columns = {
         'root_data_folder': fields.char('Root folder', size=120, 
-            help='~(.filestore/metel'),
+            help='~/.filestore/metel'),
         'root_history_folder': fields.char('History folder', size=120,
-            help='~(.filestore/metel/history'),
+            help='~/.filestore/metel/history'),
+        'root_log_folder': fields.char('Log folder', size=120,
+            help='~/.filestore/metel/log (every import create log)'),            
         }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

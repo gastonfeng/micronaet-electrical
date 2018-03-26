@@ -1,7 +1,19 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-
+        <!--metel.parameter-->
+        <record model="ir.ui.view" id="view_metel_parameter_path_tree">
+            <field name="name">metel.parameter.tree</field>
+            <field name="model">metel.parameter</field>
+            <field name="inherit_id" ref="metel_base.view_metel_parameter_tree"/>
+            <field name="arch" type="xml">
+                <field name="company_id" position="after">
+                    <field name="root_data_folder" />
+                    <field name="root_history_folder" />
+                    <field name="root_log_folder" />
+                </field>
+            </field>
+        </record>
     </data>
 </openerp>
 

@@ -74,6 +74,9 @@ class MetelMetel(orm.Model):
             'res.company', 'Company', required=True),            
         }
 
+    _sql_constraints = [('company_id_uniq', 'unique (company_id)', 
+        'Parameter for that company already present!')]
+
 class ProductUom(orm.Model):
     """ Model name: ProductUom
     """    
