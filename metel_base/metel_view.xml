@@ -1,6 +1,38 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
+        <!--metel.parameter-->
+        <record model="ir.ui.view" id="view_metel_parameter_tree">
+            <field name="name">metel.parameter.tree</field>
+            <field name="model">metel.parameter</field>
+            <field name="arch" type="xml">
+                <tree string="String" editable="bottom">        
+                    <field name="company_id" />
+                </tree>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="action_metel_parameter_tree">
+            <field name="name">METEL parameter</field>
+            <field name="res_model">metel.parameter</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_metel_parameter_tree"/>
+            <field name="context">{}</field>
+            <field name="domain">[]</field>
+        </record>
+        <menuitem 
+            parent="base.menu_custom" 
+            id="menu_action_metel_root" 
+            name="METEL"
+            sequence="40"
+            />
+            <menuitem 
+                parent="menu_action_metel_root" 
+                id="menu_action_metel_parameter" 
+                action="action_metel_parameter_tree"
+                sequence="10"
+                />
+        
 
     </data>
 </openerp>

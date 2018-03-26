@@ -44,7 +44,7 @@ class MetelMetel(orm.Model):
     
     _name = 'metel.parameter'
     _description = 'Metel parameter'
-    _order = 'name'
+    _order = 'company_id'
     
     # -------------------------------------------------------------------------
     # Utility for manage METEL file:

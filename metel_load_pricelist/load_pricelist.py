@@ -42,7 +42,7 @@ class MetelBase(orm.Model):
     """ Model name: MetelBase
     """
     
-    _inherit = 'metel.base'
+    _inherit = 'metel.parameter'
     
     def schedule_import_pricelist_action(self, cr, uid, context=None):
         ''' Schedule import of pricelist METEL
