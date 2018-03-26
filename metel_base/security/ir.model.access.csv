@@ -1,0 +1,3 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+access_metel_parameter_user,metel.parameter,model_metel_parameter,base.group_user,1,1,1,1
+

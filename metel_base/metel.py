@@ -38,4 +38,16 @@ from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
 
 _logger = logging.getLogger(__name__)
 
+class MetelMetel(orm.Model):
+    """ Model name: MetelMetel
+    """
+    
+    _name = 'metel.parameter'
+    _description = 'Metel parameter'
+    _order = 'name'
+    
+    _columns = {
+        'company_id': fields.many2one(
+            'res.company', 'Company', required=True),            
+        }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
