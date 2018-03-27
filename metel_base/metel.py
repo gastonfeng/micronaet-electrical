@@ -49,10 +49,26 @@ class MetelMetel(orm.Model):
     # -------------------------------------------------------------------------
     # Utility for manage METEL file:
     # -------------------------------------------------------------------------
-    def parse_text_float(self, value, float_format):
+    def parse_text_float(self, text, decimal, logger=None):
         ''' Parse text value for float number according with METEL template           
+            In METEL numbers has NN.DD format 
+            ex.: 10.2 = total char 10, last 2 is decimal so:
+                 NNNNNNNNDD  >> 0000001234 means 12.34
+            decimal = DD number, ex.: 10.2 >> 2 is decimal
+            logger: logger list for collect error during import     
         '''
-        return value
+        if logger is None:
+            logger = []
+            
+        try:
+            return float('%s.%s' % (
+                text[:-decimal],
+                text[-decimal:],
+                ))            
+        except:
+            logger.append('Error converting float %s (decimal: %s)' % (
+                text, decimal))
+            return 0.0 # nothing
         
     def parse_text_date(self, value):
         ''' Parse text value for date value according with METEL template           
