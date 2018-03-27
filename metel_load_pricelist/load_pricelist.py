@@ -111,6 +111,9 @@ class MetelBase(orm.Model):
                     data = {
                         'default_code': default_code,
                         'metel_brand_code': brand_code,
+                        'ean13': ean13,
+                        'name': name,
+                        'lst_price': lst_price,
                         }
                     
                     # search
