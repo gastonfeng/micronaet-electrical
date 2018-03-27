@@ -203,7 +203,9 @@ class ProductCategory(orm.Model):
             help='Metel code: producer of brand'),
         'metel_description': fields.char('Metel description', size=40, 
             help='Metel name: producer or brand'),
-        #'metel_partner_id': fields.many2one('res.partner', 'Metel Partner'),
+        'metel_partner_id': fields.many2one(
+            'res.partner', 'Metel Partner', 
+            help='If group is a producer element'),
         }
 
 class ProductProduct(orm.Model):
