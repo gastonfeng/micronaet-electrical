@@ -50,7 +50,6 @@ class MetelBase(orm.Model):
         # --------------------------------------------------------------------- 
         # Read parameter
         # --------------------------------------------------------------------- 
-        import pdb; pdb.set_trace()
         param_ids = self.search(cr, uid, [], context=context)
         param_proxy = self.browse(cr, uid, param_ids, context=context)[0]
         
@@ -68,6 +67,7 @@ class MetelBase(orm.Model):
         # 1. Loop pricelist folder:
         # TODO os.walk
         logger = [] # List of error
+        import pdb; pdb.set_trace()
         for root, dirs, files in os.walk(data_folder):
             for name in files:
                 fullname = os.path.join(root, name)

@@ -49,6 +49,18 @@ class MetelMetel(orm.Model):
     # -------------------------------------------------------------------------
     # Utility for manage METEL file:
     # -------------------------------------------------------------------------
+    def parse_text(self, text, logger=None):
+        ''' Clean text
+            logger: logger list for collect error during import     
+        '''
+        if logger is None:
+            logger = []
+        try:    
+            return text.strip()
+        except:
+            logger.append('Error converting text %s' % text)
+            return '?'
+
     def parse_text_number(self, text, decimal=0, logger=None):
         ''' Parse text value for float number according with METEL template           
             In METEL numbers has NN.DD format 
