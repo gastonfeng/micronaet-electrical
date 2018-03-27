@@ -53,6 +53,14 @@ class MetelBase(orm.Model):
         # --------------------------------------------------------------------- 
         param_ids = self.search(cr, uid, [], context=context)
         param_proxy = self.browse(cr, uid, param_ids, context=context)[0]
+        file_mode = [
+            'LSP', #Public pricelist
+            #'LSG', #Reseller pricelist
+            #'FST', #Statistic family
+            #'FSC', #Discount family
+            #'RIC', #Recode
+            #'BAR', #Barcode
+            ]
         
         # Pool used:
         product_pool = self.pool.get('product.product') 
@@ -70,7 +78,19 @@ class MetelBase(orm.Model):
         logger = [] # List of error
         for root, dirs, files in os.walk(data_folder):
             for filename in files:
-                fullname = os.path.join(root, filename)
+                # Parse filename:
+                file_producer_code = filename[3:6]
+                file_brand_code = filename[3:6]
+                currency = (filename.split('.')[0])[6:]
+                
+                if file_brand_code not in file_mode:
+                    if verbose:
+                        _logger.info('Jump METEL file: %s (not in %s)' % (
+                            fullname, file_mode,
+                            ))
+                    continue    
+                    
+                fullname = os.path.join(root, filename)                
                 if verbose:
                     _logger.info('Read METEL file: %s' % fullname)
                 i = upd = new = 0
@@ -80,6 +100,8 @@ class MetelBase(orm.Model):
                     # Header:
                     # ---------------------------------------------------------                    
                     if i == 1:
+                        if verbose:
+                            _logger.info('%s. Read header METEL' % i)
                         # TODO
                         continue
                     
