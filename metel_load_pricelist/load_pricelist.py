@@ -50,6 +50,7 @@ class MetelBase(orm.Model):
         # --------------------------------------------------------------------- 
         # Read parameter
         # --------------------------------------------------------------------- 
+        import pdb; pdb.set_trace()
         param_ids = self.search(cr, uid, [], context=context)
         param_proxy = self.browse(cr, uid, param_ids, context=context)[0]
         
@@ -114,14 +115,20 @@ class MetelBase(orm.Model):
                         'ean13': ean13,
                         'name': name,
                         'lst_price': lst_price,
+                        'type': 'product', 
                         }
                     
-                    # search
-                    
-                    # IF
-                    #     Write
-                    #     Create    
-                        
+                    product_ids = product_pool.search(cr, uid, [
+                         ('default_code','=', default_code),
+                         ('metel_brand_code', '=', brand_code),
+                         ], context=context),
+
+                    if product_ids: 
+                        product_pool.write(
+                            cr, uid, product_ids, data, context=context)
+                    else:        
+                        product_pool.create(
+                            cr, uid, data, context=context)
                     
             break # only first root folder    
         
