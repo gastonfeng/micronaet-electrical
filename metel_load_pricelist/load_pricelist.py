@@ -44,7 +44,8 @@ class MetelBase(orm.Model):
     
     _inherit = 'metel.parameter'
     
-    def schedule_import_pricelist_action(self, cr, uid, context=None):
+    def schedule_import_pricelist_action(self, cr, uid, verbose=True, 
+            context=None):
         ''' Schedule import of pricelist METEL
         '''
         # --------------------------------------------------------------------- 
@@ -67,11 +68,12 @@ class MetelBase(orm.Model):
         # 1. Loop pricelist folder:
         # TODO os.walk
         logger = [] # List of error
-        import pdb; pdb.set_trace()
         for root, dirs, files in os.walk(data_folder):
-            for name in files:
-                fullname = os.path.join(root, name)
-                i = 0
+            for filename in files:
+                fullname = os.path.join(root, filename)
+                if verbose:
+                    _logger.info('Read METEL file: %s' % fullname)
+                i = upd = new = 0
                 for line in open(fullname, 'r'):
                     i += 1
                     # ---------------------------------------------------------                    
@@ -84,10 +86,10 @@ class MetelBase(orm.Model):
                     # ---------------------------------------------------------                    
                     # Data row:
                     # ---------------------------------------------------------
-                    brand_code = line[0:3] # TODO create also category
-                    default_code = line[3:19]
-                    ean13 = line[19:32]
-                    name = line[32:75]
+                    brand_code = self.parse_text(line[0:3], logger) # TODO create also category
+                    default_code = self.parse_text(line[3:19], logger)
+                    ean13 = self.parse_text(line[19:32], logger)
+                    name = self.parse_text(line[32:75], logger)
                     #> q_x_pack = line[75:80]
                     #> q_multipla_ordine= line[80:85]
                     #> order_min = self.parse_text_number(line[85:90])
@@ -121,16 +123,29 @@ class MetelBase(orm.Model):
                     product_ids = product_pool.search(cr, uid, [
                          ('default_code','=', default_code),
                          ('metel_brand_code', '=', brand_code),
-                         ], context=context),
+                         ], context=context)
 
                     if product_ids: 
                         product_pool.write(
                             cr, uid, product_ids, data, context=context)
+                        if verbose:
+                            upd += 1
+                            _logger.info('%s. Update %s-%s' % (
+                                i, brand_code, default_code))
                     else:        
                         product_pool.create(
                             cr, uid, data, context=context)
+                        if verbose:
+                            new += 1
+                            _logger.info('%s. Create %s-%s' % (
+                                i, brand_code, default_code))
                     
             break # only first root folder    
+            if verbose:
+                _logger.info(
+                    'File: %s record: %s [UPD %s NEW %s]' % (
+                        filename, i, upd, new,
+                        ))
         
         # 2. Import single file (parse, create/write)
         
