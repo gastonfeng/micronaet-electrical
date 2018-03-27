@@ -53,6 +53,9 @@ class MetelBase(orm.Model):
         param_ids = self.search(cr, uid, [], context=context)
         param_proxy = self.browse(cr, uid, param_ids, context=context)[0]
         
+        # Pool used:
+        product_pool = self.pool.get('product.product') 
+        
         # 3 folder used:
         data_folder = os.path.expanduser(param_proxy.root_data_folder)
         history_folder = os.path.expanduser(param_proxy.root_history_folder)
@@ -63,6 +66,7 @@ class MetelBase(orm.Model):
         # --------------------------------------------------------------------- 
         # 1. Loop pricelist folder:
         # TODO os.walk
+        logger = [] # List of error
         for root, dirs, files in os.walk(data_folder):
             for name in files:
                 fullname = os.path.join(root, name)
@@ -79,11 +83,43 @@ class MetelBase(orm.Model):
                     # ---------------------------------------------------------                    
                     # Data row:
                     # ---------------------------------------------------------
+                    brand_code = line[0:3] # TODO create also category
+                    default_code = line[3:19]
+                    ean13 = line[19:32]
+                    name = line[32:75]
+                    #> q_x_pack = line[75:80]
+                    #> q_multipla_ordine= line[80:85]
+                    #> order_min = self.parse_text_number(line[85:90])
+                    #> order_max = self.parse_text_number(line[90:96])
+                    #> leadtime = self.parse_text_number(line[96:97])
+                    lst_price = self.parse_text_number(
+                        line[97:108], 2, logger) # reseller price
+                    #> metel_list_price = self.parse_text_number(
+                    #    line[108:119], 2, logger) # Public price
+                    #> moltiplicatore_prezzo = line[119:125]
+                    #> codice_valuta = line[125:128]
+                    #uom = line[128:131]
+                    #> prodotto_composto = line[131:132]       
+                    #> metel_state = line[132:133]
+                    #> last_variation = line[133:141]
+                    #> discount_family = line[141:159]
+                    #> statistic_family = line[159:177]
+                    #> electrocod = line[177:197]
+                    #> barcode = line[197:232]
+                    #> barcode_move = line[232:233]          
                     
-                    # Read field list:
+                    data = {
+                        'default_code': default_code,
+                        'metel_brand_code': brand_code,
+                        }
                     
+                    # search
                     
-                
+                    # IF
+                    #     Write
+                    #     Create    
+                        
+                    
             break # only first root folder    
         
         # 2. Import single file (parse, create/write)

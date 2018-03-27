@@ -49,31 +49,50 @@ class MetelMetel(orm.Model):
     # -------------------------------------------------------------------------
     # Utility for manage METEL file:
     # -------------------------------------------------------------------------
-    def parse_text_float(self, text, decimal, logger=None):
+    def parse_text_number(self, text, decimal=0, logger=None):
         ''' Parse text value for float number according with METEL template           
             In METEL numbers has NN.DD format 
             ex.: 10.2 = total char 10, last 2 is decimal so:
                  NNNNNNNNDD  >> 0000001234 means 12.34
             decimal = DD number, ex.: 10.2 >> 2 is decimal
+                if decimal = 0 return interger
             logger: logger list for collect error during import     
         '''
         if logger is None:
             logger = []
             
         try:
-            return float('%s.%s' % (
-                text[:-decimal],
-                text[-decimal:],
-                ))            
+            if decimal:
+                return float('%s.%s' % (
+                    text[:-decimal],
+                    text[-decimal:],
+                    ))            
+            else: 
+                return int(text)        
         except:
             logger.append('Error converting float %s (decimal: %s)' % (
                 text, decimal))
             return 0.0 # nothing
         
-    def parse_text_date(self, value):
+    def parse_text_date(self, text, mode='YYYYMMDD', logger=None):
         ''' Parse text value for date value according with METEL template           
+            METEL format YYYYMMDD (Iso without char)
+            logger: logger list for collect error during import             
         '''
-        return value
+        if logger is None:
+            logger = []
+
+        if not text:
+            return False
+            
+        if mode == 'YYYYMMDD':
+            return '%s-%s-%s' % (
+                text[:4],
+                text[4:6],
+                text[6:8],
+                )
+        #else: # XXX no way always mode is present!
+        return False
 
     #def parse_text_country(self, value):
     #    ''' Parse text value for country ID according with METEL template           
@@ -189,5 +208,8 @@ class ProductProduct(orm.Model):
             'product.category', 'Metel brand'),
         'metel_list_price': fields.float('Metel pricelist', 
             digits_compute=dp.get_precision('Product Price')),
+            
+        'metel_brand_code': fields.char('Brand code', size=10),    
+        'metel_producer_code': fields.char('Producer code', size=10),    
         }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
