@@ -50,20 +50,41 @@ class MetelBase(orm.Model):
         # --------------------------------------------------------------------- 
         # Read parameter
         # --------------------------------------------------------------------- 
-        # 1. Pricelist folder, history folder, log folder
         param_ids = self.search(cr, uid, [], context=context)
-        self.browse(cr, uid, param_ids, context=context)
+        param_proxy = self.browse(cr, uid, param_ids, context=context)[0]
+        
+        # 3 folder used:
+        data_folder = os.path.expanduser(param_proxy.root_data_folder)
+        history_folder = os.path.expanduser(param_proxy.root_history_folder)
+        log_folder = os.path.expanduser(param_proxy.root_log_folder)
+        
         # --------------------------------------------------------------------- 
         # Import procecedure:
         # --------------------------------------------------------------------- 
         # 1. Loop pricelist folder:
         # TODO os.walk
-        import os
-        for root, dirs, files in os.walk(".", topdown=False):
-           for name in files:
-              print(os.path.join(root, name))
-           for name in dirs:
-              print(os.path.join(root, name))
+        for root, dirs, files in os.walk(data_folder):
+            for name in files:
+                fullname = os.path.join(root, name)
+                i = 0
+                for line in open(fullname, 'r'):
+                    i += 1
+                    # ---------------------------------------------------------                    
+                    # Header:
+                    # ---------------------------------------------------------                    
+                    if i == 1:
+                        # TODO
+                        continue
+                    
+                    # ---------------------------------------------------------                    
+                    # Data row:
+                    # ---------------------------------------------------------
+                    
+                    # Read field list:
+                    
+                    
+                
+            break # only first root folder    
         
         # 2. Import single file (parse, create/write)
         
