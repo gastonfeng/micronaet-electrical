@@ -47,6 +47,31 @@ class MetelBase(orm.Model):
     def schedule_import_pricelist_action(self, cr, uid, context=None):
         ''' Schedule import of pricelist METEL
         '''
+        # --------------------------------------------------------------------- 
+        # Read parameter
+        # --------------------------------------------------------------------- 
+        # 1. Pricelist folder, history folder, log folder
+        param_ids = self.search(cr, uid, [], context=context)
+        self.browse(cr, uid, param_ids, context=context)
+        # --------------------------------------------------------------------- 
+        # Import procecedure:
+        # --------------------------------------------------------------------- 
+        # 1. Loop pricelist folder:
+        # TODO os.walk
+        import os
+        for root, dirs, files in os.walk(".", topdown=False):
+           for name in files:
+              print(os.path.join(root, name))
+           for name in dirs:
+              print(os.path.join(root, name))
+        
+        # 2. Import single file (parse, create/write)
+        
+        # 3. History 
+        
+        # 4. Log operation
+        
+        
         return True
         
     _columns = {
