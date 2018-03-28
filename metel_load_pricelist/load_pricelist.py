@@ -167,6 +167,7 @@ class MetelBase(orm.Model):
                     # ---------------------------------------------------------
                     # Create record data:
                     # ---------------------------------------------------------
+                    # Master data:
                     data = {
                         'default_code': default_code,
                         'metel_brand_code': brand_code,
@@ -191,13 +192,18 @@ class MetelBase(orm.Model):
                             metel_alternate_barcode_type,
                         }
 
-                    # Add uom:
+                    # Extra data: uom:
                     uom_id = uom_db.get(uom, False)
                     if uom_id:
                         data['uom_id'] = uom_id
                     elif uom not in uom_missed:
                         uom_missed.append(uom)
                     
+                    # TODO Extra data: discount management for price?    
+                        
+                    # ---------------------------------------------------------
+                    # Update database:
+                    # ---------------------------------------------------------
                     product_ids = product_pool.search(cr, uid, [
                          ('default_code','=', default_code),
                          ('metel_brand_code', '=', brand_code),
@@ -217,7 +223,7 @@ class MetelBase(orm.Model):
                             new += 1
                             _logger.info('%s. Create %s-%s' % (
                                 i, brand_code, default_code))
-                
+                                                
                 f_metel.close()
                 
                 # -------------------------------------------------------------
@@ -237,9 +243,9 @@ class MetelBase(orm.Model):
                     logger.append(
                         _('No history folder setup for move imported'))
 
-                # ---------------------------------------------------------------------    
+                # -------------------------------------------------------------
                 # Log operation
-                # ---------------------------------------------------------------------    
+                # -------------------------------------------------------------
                 if logger:
                     if log_folder:
                         log_file = os.path.join(
@@ -252,8 +258,9 @@ class MetelBase(orm.Model):
                         f_log.close()    
                     else:    
                         if verbose:
-                            _logger.info(_('Log folder not present!\nError: %s') % (
-                                logger))
+                            _logger.info(
+                                _('Log folder not present!\nError: %s') % (
+                                    logger))
                     
                     
             break # only first root folder    
