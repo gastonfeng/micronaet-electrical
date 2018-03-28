@@ -246,6 +246,11 @@ class MetelBase(orm.Model):
                 # -------------------------------------------------------------
                 # Log operation
                 # -------------------------------------------------------------
+                # Add extra log for UOM:
+                if uom_missed:
+                    logger.append(_('Missed UOM code: %s') % uom_missed)
+                
+                # Write operation:    
                 if logger:
                     if log_folder:
                         log_file = os.path.join(
@@ -261,17 +266,18 @@ class MetelBase(orm.Model):
                             _logger.info(
                                 _('Log folder not present!\nError: %s') % (
                                     logger))
+                                    
+                # -------------------------------------------------------------
+                # System log operation:
+                # -------------------------------------------------------------
+                if verbose:
+                    _logger.info(
+                        'File: %s record: %s [UPD %s NEW %s]' % (
+                            filename, i, upd, new,
+                            ))
+                    _logger.info('UOM missed [%s]' % (uom_missed, ))
                     
-                    
-            break # only first root folder    
-            if verbose:
-                _logger.info(
-                    'File: %s record: %s [UPD %s NEW %s]' % (
-                        filename, i, upd, new,
-                        ))
-                _logger.info('UOM missed [%s]' % (uom_missed, ))
-            if uom_missed:
-                logger.append(_('Missed UOM code: %s') % uom_missed)
+            break # only files in first root folder            
         return True
         
     _columns = {
