@@ -262,10 +262,19 @@ class ProductProduct(orm.Model):
             'product.category', 'Metel brand'),
         'metel_list_price': fields.float('Metel pricelist', 
             digits_compute=dp.get_precision('Product Price')),
-            
+        'metel_q_x_pack': fields.integer('Q. x pack'),            
+        'metel_order_lot': fields.integer('Order lot'),
+        'metel_order_min': fields.integer('Order min'),
+        'metel_order_max': fields.integer('Order max'),
+        'metel_leadtime': fields.integer('Order leadtime'),
         'metel_electrocod': fields.char('Electrocod', size=24),    
         'metel_brand_code': fields.char('Brand code', size=10),    
         'metel_producer_code': fields.char('Producer code', size=10),
+        'metel_kit':fields.boolean('KIT'),
+
+        'metel_alternate_barcode': fields.char('Alternate barcode', size=50),    
+        'metel_alternate_barcode_type': fields.char('Alternate barcode type', 
+            size=6),    
         'metel_state': fields.selection([
             ('1', 'New product'),
             ('2', 'Finished or to be cancel'),

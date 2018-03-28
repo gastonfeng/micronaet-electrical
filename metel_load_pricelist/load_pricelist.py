@@ -88,6 +88,7 @@ class MetelBase(orm.Model):
                 # Parse filename:
                 file_producer_code = filename[3:6]
                 file_brand_code = filename[3:6]
+                # TODO version?
                 currency = (filename.split('.')[0])[6:]
                 
                 if file_brand_code not in file_mode:
@@ -120,26 +121,32 @@ class MetelBase(orm.Model):
                     default_code = self.parse_text(line[3:19], logger)
                     ean13 = self.parse_text(line[19:32], logger)
                     name = self.parse_text(line[32:75], logger)
-                    #> q_x_pack = line[75:80]
-                    #> q_multipla_ordine= line[80:85]
-                    #> order_min = self.parse_text_number(line[85:90])
-                    #> order_max = self.parse_text_number(line[90:96])
-                    #> leadtime = self.parse_text_number(line[96:97])
+                    metel_q_x_pack = self.parse_text(line[75:80], logger)
+                    metel_order_lot = self.parse_text_number(
+                        line[80:85], logger)
+                    metel_order_min = self.parse_text_number(line[85:90], logger)
+                    metel_order_max = self.parse_text_number(line[90:96], logger)
+                    metel_order_leadtime = self.parse_text_number(line[96:97], logger)
                     lst_price = self.parse_text_number(
                         line[97:108], 2, logger) # reseller price
                     metel_list_price = self.parse_text_number(
                         line[108:119], 2, logger) # public price
                     #> moltiplicatore_prezzo = line[119:125]
-                    #> codice_valuta = line[125:128]
+                    #currency = self.parse_text(line[125:128], logger)
                     uom = self.parse_text_number(line[128:131], logger)
-                    #> prodotto_composto = line[131:132]       
+                    metel_kit = self.parse_text_boolean(line[131:132], logger)     
                     metel_state = self.parse_text(line[132:133], logger)
-                    #> last_variation = line[133:141]
-                    #> discount_family = line[141:159]
-                    #> statistic_family = line[159:177]
-                    metel_electrocod = line[177:197]
-                    #> barcode = line[197:232]
-                    #> barcode_move = line[232:233]          
+                    #> last_variation = line[133:141], logger)
+                    #> discount_family = line[141:159], logger)
+                    #> statistic_family = line[159:177], logger)
+                    metel_electrocod = self.parse_text(
+                        line[177:197], logger)
+                    
+                    # Alternate value for EAN code:
+                    metel_alternate_barcode = self.parse_text(
+                        line[197:232], logger)
+                    metel_alternate_barcode_type = self.parse_text(
+                        line[232:233], logger)
                     
                     data = {
                         'default_code': default_code,
@@ -148,9 +155,19 @@ class MetelBase(orm.Model):
                         'name': name,
                         'lst_price': lst_price,
                         'type': 'product', 
+                        'metel_q_x_pack': metel_q_x_pack,
+                        'metel_order_lot': metel_order_lot,
+                        'metel_order_min': metel_order_min,
+                        'metel_order_max': metel_order_max,
+                        'metel_order_leadtime': metel_order_leadtime,
                         'metel_list_price': metel_list_price,
+                        'metel_kit': metel_kit,
                         'metel_state': metel_state,
                         'metel_electrocod': metel_electrocod,
+                        'metel_alternate_barcode': 
+                            metel_alternate_barcode,
+                        'metel_alternate_barcode_type': 
+                            metel_alternate_barcode_type,
                         }
 
                     # Add uom:    
