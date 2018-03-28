@@ -1,6 +1,29 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
+        <!-- INHERIT -->
+        <!--product.uom-->
+        <record model="ir.ui.view" id="view_product_uom_metel_tree">
+            <field name="name">product.uom.metel.tree</field>
+            <field name="model">product.uom</field>
+            <field name="inherit_id" ref="product.product_uom_tree_view"/>
+            <field name="arch" type="xml">
+                <field name="category_id" position="after">
+                    <field name="metel_code" />
+                </field>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_product_uom_metel_form">
+            <field name="name">product.uom.metel.form</field>
+            <field name="model">product.uom</field>
+            <field name="inherit_id" ref="product.product_uom_form_view"/>
+            <field name="arch" type="xml">
+                <field name="factor" position="after">
+                    <field name="metel_code" />
+                </field>
+            </field>
+        </record>
+        
         <!--metel.parameter-->
         <record model="ir.ui.view" id="view_metel_parameter_tree">
             <field name="name">metel.parameter.tree</field>

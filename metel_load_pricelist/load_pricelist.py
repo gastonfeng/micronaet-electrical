@@ -144,7 +144,7 @@ class MetelBase(orm.Model):
                     uom = self.parse_text_number(line[128:131], logger)
                     metel_kit = self.parse_text_boolean(line[131:132], logger)     
                     metel_state = self.parse_text(line[132:133], logger)
-                    metel_last_variation = self.parse_text_dateline[133:141], 
+                    metel_last_variation = self.parse_text_date(line[133:141], 
                         logger=logger)
                     metel_discount = self.parse_text(line[141:159], logger)
                     metel_statistic = self.parse_text(line[159:177], logger)
