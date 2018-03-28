@@ -207,7 +207,7 @@ class ProductCategory(orm.Model):
             return self.create(cr, uid, {
                 'parent_id': parent_id,
                 'metel_code': code,
-                'metel_name': name or code or '',
+                'name': name or code or '',
                 }, context=context)
     
     # Producer group ID:
@@ -260,18 +260,25 @@ class ProductProduct(orm.Model):
             'product.category', 'Metel producer'),
         'metel_brand_id': fields.many2one(
             'product.category', 'Metel brand'),
+         
+        # Price:    
         'metel_list_price': fields.float('Metel pricelist', 
             digits_compute=dp.get_precision('Product Price')),
         'metel_multi_price': fields.integer('Multi price', 
             help='When price is < 0.01 use multiplicator'),
+            
+        # Order:    
         'metel_q_x_pack': fields.integer('Q. x pack'),            
         'metel_order_lot': fields.integer('Order lot'),
         'metel_order_min': fields.integer('Order min'),
         'metel_order_max': fields.integer('Order max'),
         'metel_leadtime': fields.integer('Order leadtime'),
+        
+        # Code:
         'metel_electrocod': fields.char('Electrocod', size=24),    
         'metel_brand_code': fields.char('Brand code', size=10),    
         'metel_producer_code': fields.char('Producer code', size=10),
+        
         'metel_kit':fields.boolean('KIT'),
         'metel_last_variation': fields.date('Last variation'),
         'metel_discount': fields.char('Discount', size=20),    

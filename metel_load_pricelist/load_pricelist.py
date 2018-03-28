@@ -51,6 +51,7 @@ class MetelBase(orm.Model):
         '''
         # Pool used:
         product_pool = self.pool.get('product.product') 
+        category_pool = self.pool.get('product.category')
 
         # --------------------------------------------------------------------- 
         # Read parameter
@@ -86,17 +87,20 @@ class MetelBase(orm.Model):
         # Import procecedure:
         # --------------------------------------------------------------------- 
         # 1. Loop pricelist folder:
-        # TODO os.walk
+        created_group = []
         for root, dirs, files in os.walk(data_folder):
             for filename in files:
                 logger = [] # List of error (reset every file)
                 
                 # Parse filename:
-                file_producer_code = filename[3:6]
+                file_producer_code = filename[:3]
                 file_brand_code = filename[3:6]
                 # TODO version?
                 currency = (filename.split('.')[0])[6:]
-                
+                metel_producer_id = category_pool.get_create_producer_group(
+                    cr, uid, file_producer_code, file_producer_code,
+                    context=context)
+                fullname = os.path.join(root, filename)                
                 if file_brand_code not in file_mode:
                     if verbose:
                         _logger.info('Jump METEL file: %s (not in %s)' % (
@@ -104,7 +108,6 @@ class MetelBase(orm.Model):
                             ))
                     continue    
                     
-                fullname = os.path.join(root, filename)                
                 if verbose:
                     _logger.info('Read METEL file: %s' % fullname)
                 i = upd = new = 0
@@ -112,6 +115,10 @@ class MetelBase(orm.Model):
                 f_metel = open(fullname, 'r')
                 for line in f_metel:
                     i += 1
+                    
+                    # XXX Remove
+                    if i >= 100:
+                        break
                     # ---------------------------------------------------------                    
                     # Header:
                     # ---------------------------------------------------------                    
@@ -124,30 +131,44 @@ class MetelBase(orm.Model):
                     # ---------------------------------------------------------                    
                     # Data row:
                     # ---------------------------------------------------------
-                    brand_code = self.parse_text(line[0:3], logger) # TODO create also category
-                    default_code = self.parse_text(line[3:19], logger)
-                    ean13 = self.parse_text(line[19:32], logger)
-                    name = self.parse_text(line[32:75], logger)
-                    metel_q_x_pack = self.parse_text(line[75:80], logger)
+                    brand_code = self.parse_text(
+                        line[0:3], logger) # TODO create also category
+                    default_code = self.parse_text(
+                        line[3:19], logger)
+                    ean13 = self.parse_text(
+                        line[19:32], logger)
+                    name = self.parse_text(
+                        line[32:75], logger)
+                    metel_q_x_pack = self.parse_text(
+                        line[75:80], logger)
                     metel_order_lot = self.parse_text_number(
                         line[80:85], logger)
-                    metel_order_min = self.parse_text_number(line[85:90], logger)
-                    metel_order_max = self.parse_text_number(line[90:96], logger)
-                    metel_leadtime = self.parse_text_number(line[96:97], logger)
+                    metel_order_min = self.parse_text_number(
+                        line[85:90], logger)
+                    metel_order_max = self.parse_text_number(
+                        line[90:96], logger)
+                    metel_leadtime = self.parse_text_number(
+                        line[96:97], logger)
                     lst_price = self.parse_text_number(
                         line[97:108], 2, logger) # reseller price
                     metel_list_price = self.parse_text_number(
                         line[108:119], 2, logger) # public price
                     metel_multi_price = self.parse_text_number(
                         line[119:125], logger)
-                    currency = self.parse_text(line[125:128], logger)
-                    uom = self.parse_text_number(line[128:131], logger)
-                    metel_kit = self.parse_text_boolean(line[131:132], logger)     
-                    metel_state = self.parse_text(line[132:133], logger)
-                    metel_last_variation = self.parse_text_date(line[133:141], 
-                        logger=logger)
-                    metel_discount = self.parse_text(line[141:159], logger)
-                    metel_statistic = self.parse_text(line[159:177], logger)
+                    currency = self.parse_text(
+                        line[125:128], logger)
+                    uom = self.parse_text_number(
+                        line[128:131], logger)
+                    metel_kit = self.parse_text_boolean(
+                        line[131:132], logger)     
+                    metel_state = self.parse_text(
+                        line[132:133], logger)
+                    metel_last_variation = self.parse_text_date(
+                        line[133:141], logger=logger)
+                    metel_discount = self.parse_text(
+                        line[141:159], logger)
+                    metel_statistic = self.parse_text(
+                        line[159:177], logger)
                     metel_electrocod = self.parse_text(
                         line[177:197], logger)
                     
@@ -164,12 +185,26 @@ class MetelBase(orm.Model):
                     
                     # TODO use currency    
                     
+                    # TODO Create group for brand and producer
+                    # Create brand group:
+                    if (file_producer_code, brand_code) in created_group: 
+                        metel_brand_id = created_group[
+                            (file_producer_code, brand_code)]
+                    else:
+                        metel_brand_id = category_pool.get_create_brand_group(
+                            cr, uid, file_producer_code, brand_code, 
+                            brand_code, # name = code (modify in anagraphic)
+                            context=context)
                     # ---------------------------------------------------------
                     # Create record data:
                     # ---------------------------------------------------------
                     # Master data:
                     data = {
+                        'is_metel': True,
                         'default_code': default_code,
+                        'metel_producer_id': metel_producer_id,
+                        'metel_brand_id': metel_brand_id,                        
+                        'metel_producer_code': file_producer_code,
                         'metel_brand_code': brand_code,
                         'ean13': ean13,
                         'name': name,

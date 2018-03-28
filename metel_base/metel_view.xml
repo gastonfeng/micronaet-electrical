@@ -24,6 +24,75 @@
             </field>
         </record>
         
+        <!-- product.product-->
+        <record model="ir.ui.view" id="view_product_product_metel_page_form">
+            <field name="name">product.product.metel.form</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <field name="sale_ok" position="before">
+                    <field name="is_metel" />
+                    <label for="is_metel" />
+                </field>
+                <xpath expr="//page[1]" position="after">
+                    <page string="METEL" attrs="{'invisible': [('is_metel','=',False)]}">
+                       <group colspan="4" col="4">
+                            <separator string="Information:" colspan="4"/>
+                            <field name="metel_electrocod" />
+                            <field name="metel_state" /> 
+                            
+                            <field name="metel_producer_id" />
+                            <field name="metel_brand_id" />                                       
+
+                            <field name="metel_producer_code" />
+                            <field name="metel_brand_code" />
+                            
+                            <field name="metel_kit" />
+                            <field name="metel_last_variation" />                                        
+
+                            <field name="metel_alternate_barcode" /> 
+                            <field name="metel_alternate_barcode_type" /> 
+
+                            <separator string="Order:" colspan="4"/>
+                            <field name="metel_list_price" />
+                            <field name="metel_multi_price" />
+
+                            <field name="metel_q_x_pack" />
+                            <field name="metel_order_lot" />                                        
+                            
+                            <field name="metel_discount" />
+                            <field name="metel_statistic" />
+                            
+                            <field name="metel_order_min" />
+                            <field name="metel_order_max" />
+
+                            <field name="metel_leadtime" />
+                       </group>
+                       <!-- <group colspan="4" col="4">
+                            <notebook colspan="4">
+                                <page string="Information">
+                                </page>
+                                <page string="Order">
+                                    <group colspan="4" col="4">
+                                    </group>
+                                </page>
+                            </notebook>
+                        </group>-->
+                    </page>
+                </xpath>
+            </field>
+        </record>        
+        <record model="ir.ui.view" id="view_product_product_metel_search">
+            <field name="name">product.product.metelsearch</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_search_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[1]" position="before">
+                    <filter name="product_metel" string="METEL" domain="[('is_metel','=',True)]"/>
+                </xpath>    
+            </field>
+        </record>        
+        
         <!--metel.parameter-->
         <record model="ir.ui.view" id="view_metel_parameter_tree">
             <field name="name">metel.parameter.tree</field>
