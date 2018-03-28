@@ -47,7 +47,11 @@ class MetelMetel(orm.Model):
     _order = 'company_id'
     
     # -------------------------------------------------------------------------
-    # Utility for manage METEL file:
+    #                      Utility for manage METEL file:
+    # -------------------------------------------------------------------------
+    
+    # -------------------------------------------------------------------------
+    # Parse function for type:
     # -------------------------------------------------------------------------
     def parse_text(self, text, logger=None):
         ''' Clean text
@@ -118,6 +122,9 @@ class MetelMetel(orm.Model):
         #else: # XXX no way always mode is present!
         return False
 
+    # -------------------------------------------------------------------------
+    # Load database for parsing:
+    # -------------------------------------------------------------------------
     def load_parse_text_currency(self, cr, uid, context=None):
         ''' Parse text value for currency ID according with METEL code
         '''
@@ -127,6 +134,18 @@ class MetelMetel(orm.Model):
         for currency in currency_pool.browse(cr, uid, currency_ids,
                 context=context):
             res[currency.name] = currency.id
+        return res
+
+    def load_parse_text_uom(self, cr, uid, context=None):
+        ''' Parse text value for uom ID according with METEL code
+        '''
+        res = {}
+        uom_pool = self.pool.get('product.uom')
+        uom_ids = uom_pool.search(cr, uid, [], context=context)
+        for uom in uom_pool.browse(cr, uid, uom_ids,
+                context=context):
+            if uom.metel_code:
+                res[uom.metel_code] = uom.id
         return res
 
     #def parse_text_country(self, value):
@@ -253,6 +272,7 @@ class ProductProduct(orm.Model):
         'metel_list_price': fields.float('Metel pricelist', 
             digits_compute=dp.get_precision('Product Price')),
             
+        'metel_electrocod': fields.char('Electrocod', size=24),    
         'metel_brand_code': fields.char('Brand code', size=10),    
         'metel_producer_code': fields.char('Producer code', size=10),
         'metel_state': fields.selection([

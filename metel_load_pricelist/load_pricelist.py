@@ -48,11 +48,22 @@ class MetelBase(orm.Model):
             context=None):
         ''' Schedule import of pricelist METEL
         '''
+        # Pool used:
+        product_pool = self.pool.get('product.product') 
+
         # --------------------------------------------------------------------- 
         # Read parameter
         # --------------------------------------------------------------------- 
+        # Database parameters:
         param_ids = self.search(cr, uid, [], context=context)
         param_proxy = self.browse(cr, uid, param_ids, context=context)[0]
+
+        # 3 folder used:
+        data_folder = os.path.expanduser(param_proxy.root_data_folder)
+        history_folder = os.path.expanduser(param_proxy.root_history_folder)
+        log_folder = os.path.expanduser(param_proxy.root_log_folder)
+
+        # Mode list for file:        
         file_mode = [
             'LSP', #Public pricelist
             #'LSG', #Reseller pricelist
@@ -62,13 +73,9 @@ class MetelBase(orm.Model):
             #'BAR', #Barcode
             ]
         
-        # Pool used:
-        product_pool = self.pool.get('product.product') 
-        
-        # 3 folder used:
-        data_folder = os.path.expanduser(param_proxy.root_data_folder)
-        history_folder = os.path.expanduser(param_proxy.root_history_folder)
-        log_folder = os.path.expanduser(param_proxy.root_log_folder)
+        # Currency database:    
+        currency_db = self.load_parse_text_currency(cr, uid, context=context)
+        uom_db = self.load_parse_text_uom(cr, uid, context=context)
         
         # --------------------------------------------------------------------- 
         # Import procecedure:
@@ -123,13 +130,13 @@ class MetelBase(orm.Model):
                         line[108:119], 2, logger) # public price
                     #> moltiplicatore_prezzo = line[119:125]
                     #> codice_valuta = line[125:128]
-                    #uom = line[128:131]
+                    uom = self.parse_text_number(line[128:131], logger)
                     #> prodotto_composto = line[131:132]       
-                    metel_state = self.parse_text_number(line[132:133], logger)
+                    metel_state = self.parse_text(line[132:133], logger)
                     #> last_variation = line[133:141]
                     #> discount_family = line[141:159]
                     #> statistic_family = line[159:177]
-                    #> electrocod = line[177:197]
+                    metel_electrocod = line[177:197]
                     #> barcode = line[197:232]
                     #> barcode_move = line[232:233]          
                     
@@ -142,7 +149,13 @@ class MetelBase(orm.Model):
                         'type': 'product', 
                         'metel_list_price': metel_list_price,
                         'metel_state': metel_state,
+                        'metel_electrocod': metel_electrocod,
                         }
+
+                    # Add uom:    
+                    uom_id = uom_db.get(uom, False)
+                    if uom_id:
+                        data['uom_id'] = uom_id
                     
                     product_ids = product_pool.search(cr, uid, [
                          ('default_code','=', default_code),
