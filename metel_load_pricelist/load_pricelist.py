@@ -101,6 +101,7 @@ class MetelBase(orm.Model):
                 if verbose:
                     _logger.info('Read METEL file: %s' % fullname)
                 i = upd = new = 0
+                uom_missed = []
                 for line in open(fullname, 'r'):
                     i += 1
                     # ---------------------------------------------------------                    
@@ -156,6 +157,8 @@ class MetelBase(orm.Model):
                     uom_id = uom_db.get(uom, False)
                     if uom_id:
                         data['uom_id'] = uom_id
+                    elif uom not in uom_missed:
+                        uom_missed.append(uom)
                     
                     product_ids = product_pool.search(cr, uid, [
                          ('default_code','=', default_code),
@@ -183,6 +186,9 @@ class MetelBase(orm.Model):
                     'File: %s record: %s [UPD %s NEW %s]' % (
                         filename, i, upd, new,
                         ))
+                _logger.info('UOM missed [%s]' % (uom_missed, ))
+            if uom_missed:
+                logger.append(_('Missed UOM code: %s') % uom_missed)
         
         # 2. Import single file (parse, create/write)
         

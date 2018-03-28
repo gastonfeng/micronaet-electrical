@@ -62,7 +62,7 @@ class MetelMetel(orm.Model):
         try:    
             return text.strip()
         except:
-            logger.append('Error converting text %s' % text)
+            logger.append(_('Error converting text %s') % text)
             return '?'
 
     def parse_text_boolean(self, text, logger=None):
@@ -74,7 +74,7 @@ class MetelMetel(orm.Model):
         try:    
             return text.strip() == '1'
         except:
-            logger.append('Error converting text boolean %s' % text)
+            logger.append(_('Error converting text boolean %s') % text)
             return False
 
     def parse_text_number(self, text, decimal=0, logger=None):
@@ -98,7 +98,7 @@ class MetelMetel(orm.Model):
             else: 
                 return int(text)        
         except:
-            logger.append('Error converting float %s (decimal: %s)' % (
+            logger.append(_('Error converting float %s (decimal: %s)') % (
                 text, decimal))
             return 0.0 # nothing
         
@@ -138,6 +138,9 @@ class MetelMetel(orm.Model):
 
     def load_parse_text_uom(self, cr, uid, context=None):
         ''' Parse text value for uom ID according with METEL code
+            Used:
+            PCE Pezzi - BLI Blister - BRD Cartoni - KGM Chilogrammi
+            LE Litri - LM Metri lineari - PL Pallet
         '''
         res = {}
         uom_pool = self.pool.get('product.uom')
@@ -151,18 +154,6 @@ class MetelMetel(orm.Model):
     #def parse_text_country(self, value):
     #    ''' Parse text value for country ID according with METEL template           
     #    '''
-    #    return value
-
-    #def parse_text_uom(self, value):
-    #    ''' Parse text value for uom ID according with METEL template           
-    #    '''
-    #    PCE Pezzi
-    #    BLI Blister
-    #    BRD Cartoni
-    #    KGM Chilogrammi
-    #    LE Litri
-    #    LM Metri lineari
-    #    PL Pallet
     #    return value
         
     _columns = {
@@ -210,7 +201,7 @@ class ProductCategory(orm.Model):
             ], context=context)
         if group_ids:
             if len(group_ids) > 1:
-                _logger.error('Code present more than one! [%s]' % code)
+                _logger.error(_('Code present more than one! [%s]') % code)
             return group_ids[0]
         else:
             return self.create(cr, uid, {
