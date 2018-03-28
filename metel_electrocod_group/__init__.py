@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ###############################################################################
 #
 #    Copyright (C) 2001-2014 Micronaet SRL (<http://www.micronaet.it>).
@@ -16,30 +17,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ###############################################################################
+from . import electrocod
 
-{
-    'name': 'Metel management',
-    'version': '0.1',
-    'category': 'Metel',
-    'description': '''
-        Metel Management        
-        ''',
-    'author': 'Micronaet S.r.l. - Nicola Riolini',
-    'website': 'http://www.micronaet.it',
-    'license': 'AGPL-3',
-    'depends': [
-        'base',
-        'product',
-        'metel_electrocod_group',
-        ],
-    'init_xml': [],
-    'demo': [],
-    'data': [
-        'security/ir.model.access.csv',    
-        'metel_view.xml',
-        ],
-    'active': False,
-    'installable': True,
-    'auto_install': False,
-    'application': True,
-    }
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -18,11 +18,11 @@
 ###############################################################################
 
 {
-    'name': 'Metel management',
+    'name': 'Metel Electrocod import',
     'version': '0.1',
     'category': 'Metel',
     'description': '''
-        Metel Management        
+        Metel Electrocod category of product tree structure
         ''',
     'author': 'Micronaet S.r.l. - Nicola Riolini',
     'website': 'http://www.micronaet.it',
@@ -30,16 +30,16 @@
     'depends': [
         'base',
         'product',
-        'metel_electrocod_group',
         ],
     'init_xml': [],
     'demo': [],
     'data': [
-        'security/ir.model.access.csv',    
-        'metel_view.xml',
+        'electrocod_view.xml',
+        
+        'scheduler.xml',
         ],
     'active': False,
     'installable': True,
     'auto_install': False,
-    'application': True,
+    'application': False,
     }

@@ -1,0 +1,311 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* metel_base
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-03-28 12:15+0000\n"
+"PO-Revision-Date: 2018-03-28 15:08+0100\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: \n"
+"Language: it\n"
+"X-Generator: Poedit 1.6.10\n"
+
+#. module: metel_base
+#: field:product.product,metel_alternate_barcode:0
+msgid "Alternate barcode"
+msgstr "Codice a barre alternativo"
+
+#. module: metel_base
+#: field:product.product,metel_alternate_barcode_type:0
+msgid "Alternate barcode type"
+msgstr "Tipo codice a barre alternativo"
+
+#. module: metel_base
+#: field:product.product,metel_brand_code:0
+msgid "Brand code"
+msgstr "Codice marchio"
+
+#. module: metel_base
+#: selection:product.product,metel_state:0
+msgid "Cancel product"
+msgstr "Prodotto cancellato"
+
+#. module: metel_base
+#: selection:product.product,metel_state:0
+msgid "Cancelled service"
+msgstr "Servizio cancellato"
+
+#. module: metel_base
+#: field:metel.parameter,company_id:0
+msgid "Company"
+msgstr "Azienda"
+
+#. module: metel_base
+#: field:metel.parameter,create_uid:0
+msgid "Created by"
+msgstr "Creato da"
+
+#. module: metel_base
+#: field:metel.parameter,create_date:0
+msgid "Created on"
+msgstr "Creato il"
+
+#. module: metel_base
+#: field:product.product,metel_discount:0
+msgid "Discount"
+msgstr "Sconto"
+
+#. module: metel_base
+#: field:product.product,metel_electrocod:0
+msgid "Electrocod"
+msgstr "Electrocod"
+
+#. module: metel_base
+#: selection:product.product,metel_state:0
+msgid "Finished or to be cancel"
+msgstr "Terminato o che deve essere cancellato"
+
+#. module: metel_base
+#: field:metel.parameter,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: metel_base
+#: help:product.category,metel_partner_id:0
+msgid "If group is a producer element"
+msgstr "Se il gruppo è di tipo produttore"
+
+#. module: metel_base
+#: view:product.product:metel_base.view_product_product_metel_page_form
+msgid "Information:"
+msgstr "Informazioni:"
+
+#. module: metel_base
+#: field:product.product,is_metel:0
+msgid "Is Metel"
+msgstr "Metel"
+
+#. module: metel_base
+#: field:product.product,metel_kit:0
+msgid "KIT"
+msgstr "KIT"
+
+#. module: metel_base
+#: field:metel.parameter,write_uid:0
+msgid "Last Updated by"
+msgstr "Aggiornato da"
+
+#. module: metel_base
+#: field:metel.parameter,write_date:0
+msgid "Last Updated on"
+msgstr "Aggiornato il"
+
+#. module: metel_base
+#: field:product.product,metel_last_variation:0
+msgid "Last variation"
+msgstr "Ultima variazione"
+
+#. module: metel_base
+#: model:ir.ui.menu,name:metel_base.menu_action_metel_root
+#: view:product.product:metel_base.view_product_product_metel_page_form
+#: view:product.product:metel_base.view_product_product_metel_search
+msgid "METEL"
+msgstr "METEL"
+
+#. module: metel_base
+#: view:product.product:metel_base.view_product_product_metel_search
+msgid "METEL Brand"
+msgstr "METEL Marchio"
+
+#. module: metel_base
+#: view:product.product:metel_base.view_product_product_metel_search
+msgid "METEL KIT"
+msgstr "METEL KIT"
+
+#. module: metel_base
+#: view:product.product:metel_base.view_product_product_metel_search
+msgid "METEL Last variation"
+msgstr "METEL Ultima variazione"
+
+#. module: metel_base
+#: view:product.product:metel_base.view_product_product_metel_search
+msgid "METEL Producer"
+msgstr "METEL Produttore"
+
+#. module: metel_base
+#: view:product.product:metel_base.view_product_product_metel_search
+msgid "METEL State"
+msgstr "METEL Stato"
+
+#. module: metel_base
+#: model:ir.actions.act_window,name:metel_base.action_metel_parameter_tree
+#: model:ir.ui.menu,name:metel_base.menu_action_metel_parameter
+msgid "METEL parameter"
+msgstr "METEL parametero"
+
+#. module: metel_base
+#: selection:product.product,metel_state:0
+msgid "Managed with stock"
+msgstr "Gestito con magazzino"
+
+#. module: metel_base
+#: field:product.category,metel_partner_id:0
+msgid "Metel Partner"
+msgstr "Metel Partner"
+
+#. module: metel_base
+#: field:product.product,metel_state:0
+msgid "Metel State"
+msgstr "Metel Stato"
+
+#. module: metel_base
+#: field:product.product,metel_brand_id:0
+msgid "Metel brand"
+msgstr "Metel Marchio"
+
+#. module: metel_base
+#: field:product.category,metel_code:0 field:product.uom,metel_code:0
+msgid "Metel code"
+msgstr "Metel Codice"
+
+#. module: metel_base
+#: help:product.category,metel_code:0
+msgid "Metel code: producer of brand"
+msgstr "Metel codice: produttore del marchio"
+
+#. module: metel_base
+#: field:product.category,metel_description:0
+msgid "Metel description"
+msgstr "Metel descrizione"
+
+#. module: metel_base
+#: help:product.category,metel_description:0
+msgid "Metel name: producer or brand"
+msgstr "Metel nome; produttore o marchio"
+
+#. module: metel_base
+#: model:ir.model,name:metel_base.model_metel_parameter
+msgid "Metel parameter"
+msgstr "Metel parametero"
+
+#. module: metel_base
+#: field:product.product,metel_list_price:0
+msgid "Metel pricelist"
+msgstr "Metel listino"
+
+#. module: metel_base
+#: field:product.product,metel_producer_id:0
+msgid "Metel producer"
+msgstr "Metel produttore"
+
+#. module: metel_base
+#: field:product.product,metel_multi_price:0
+msgid "Multi price"
+msgstr "Multi prezzo"
+
+#. module: metel_base
+#: selection:product.product,metel_state:0
+msgid "New product"
+msgstr "Nuovo prodotto"
+
+#. module: metel_base
+#: selection:product.product,metel_state:0
+msgid "New service"
+msgstr "Nuovo servizio"
+
+#. module: metel_base
+#: field:product.product,metel_leadtime:0
+msgid "Order leadtime"
+msgstr "Leadtime ordine"
+
+#. module: metel_base
+#: field:product.product,metel_order_lot:0
+msgid "Order lot"
+msgstr "Lotto per ordine"
+
+#. module: metel_base
+#: field:product.product,metel_order_max:0
+msgid "Order max"
+msgstr "Ordine massimo"
+
+#. module: metel_base
+#: field:product.product,metel_order_min:0
+msgid "Order min"
+msgstr "Ordine minimo"
+
+#. module: metel_base
+#: view:product.product:metel_base.view_product_product_metel_page_form
+msgid "Order:"
+msgstr "Ordine:"
+
+#. module: metel_base
+#: sql_constraint:metel.parameter:0
+msgid "Parameter for that company already present!"
+msgstr "Parametro per questa azienda già presente"
+
+#. module: metel_base
+#: selection:product.product,metel_state:0
+msgid "Produced with order"
+msgstr "Prodotto su ordine"
+
+#. module: metel_base
+#: selection:product.product,metel_state:0
+msgid "Produced with order to be cancelled"
+msgstr "Prodotto su ordine (verrà cancellato)"
+
+#. module: metel_base
+#: field:product.product,metel_producer_code:0
+msgid "Producer code"
+msgstr "Codice produttore"
+
+#. module: metel_base
+#: model:ir.model,name:metel_base.model_product_product
+msgid "Product"
+msgstr "Prodotto"
+
+#. module: metel_base
+#: model:ir.model,name:metel_base.model_product_category
+msgid "Product Category"
+msgstr "Categoria prodotto"
+
+#. module: metel_base
+#: model:ir.model,name:metel_base.model_product_uom
+msgid "Product Unit of Measure"
+msgstr "Unità di Misura Prodotto"
+
+#. module: metel_base
+#: field:product.product,metel_q_x_pack:0
+msgid "Q. x pack"
+msgstr "Q. x scatola"
+
+#. module: metel_base
+#: selection:product.product,metel_state:0
+msgid "Service (no material)"
+msgstr "Servizi (no materiale)"
+
+#. module: metel_base
+#: field:product.product,metel_statistic:0
+msgid "Statistic"
+msgstr "Statistica"
+
+#. module: metel_base
+#: help:product.product,metel_state:0
+msgid "Status product in METEL"
+msgstr "Stato prodotto METEL"
+
+#. module: metel_base
+#: view:metel.parameter:metel_base.view_metel_parameter_tree
+msgid "String"
+msgstr "Stringa"
+
+#. module: metel_base
+#: help:product.product,metel_multi_price:0
+msgid "When price is < 0.01 use multiplicator"
+msgstr "Quando il prezzo è < 0.01 utilizza il moltiplicatore"
