@@ -68,28 +68,47 @@
 
                             <field name="metel_leadtime" />
                        </group>
-                       <!-- <group colspan="4" col="4">
-                            <notebook colspan="4">
-                                <page string="Information">
-                                </page>
-                                <page string="Order">
-                                    <group colspan="4" col="4">
-                                    </group>
-                                </page>
-                            </notebook>
-                        </group>-->
                     </page>
                 </xpath>
             </field>
         </record>        
+        <record model="ir.ui.view" id="view_product_product_metel_page_tree">
+            <field name="name">product.product.metel.tree</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_product_tree_view"/>
+            <field name="arch" type="xml">
+                <field name="state" position="before">
+                    <field name="metel_kit" invisible="1" />
+                    <field name="metel_last_variation" invisible="1" />
+                    <field name="is_metel" invisible="1" />
+                    <field name="metel_producer_id" invisible="1" />
+                    <field name="metel_brand_id" invisible="1" />
+                </field>
+            </field>
+        </record>        
         <record model="ir.ui.view" id="view_product_product_metel_search">
-            <field name="name">product.product.metelsearch</field>
+            <field name="name">product.product.metel.search</field>
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_search_form_view"/>
             <field name="arch" type="xml">
                 <xpath expr="//filter[1]" position="before">
+                    <field name="metel_electrocod" />
+                    <field name="metel_state" /> 
+                    <field name="metel_producer_id" />
+                    <field name="metel_brand_id" />                                 
+                    <field name="metel_last_variation" />
+
                     <filter name="product_metel" string="METEL" domain="[('is_metel','=',True)]"/>
+                    <filter name="product_metel_kit" string="METEL KIT" domain="[('metel_kit','=',True)]"/>
                 </xpath>    
+                <xpath expr="//group[@string='Group by...']" position="inside">
+                    <filter string='METEL Producer' name="group_metel_producer" domain="[]" context="{'group_by' : 'metel_producer_id'}"/>
+                    <filter string='METEL Brand' name="group_metel_brand" domain="[]" context="{'group_by' : 'metel_brand_id'}"/>
+                    <filter string='METEL State' name="group_metel_state" domain="[]" context="{'group_by' : 'metel_state'}"/>
+                    <filter string='METEL Last variation' name="group_metel_variation" domain="[]" context="{'group_by' : 'metel_last_variation'}"/>
+                    <filter string='METEL KIT' name="group_metel_kit" domain="[]" context="{'group_by' : 'metel_kit'}"/>
+                    <filter string='METEL' name="group_metel" domain="[]" context="{'group_by' : 'is_metel'}"/>
+                </xpath>
             </field>
         </record>        
         

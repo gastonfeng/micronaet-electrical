@@ -202,10 +202,12 @@ class MetelBase(orm.Model):
                     data = {
                         'is_metel': True,
                         'default_code': default_code,
+                        
                         'metel_producer_id': metel_producer_id,
-                        'metel_brand_id': metel_brand_id,                        
+                        'metel_brand_id': metel_brand_id,                                                
                         'metel_producer_code': file_producer_code,
                         'metel_brand_code': brand_code,
+                        
                         'ean13': ean13,
                         'name': name,
                         'lst_price': lst_price,
