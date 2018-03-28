@@ -131,14 +131,16 @@ class MetelBase(orm.Model):
                         line[97:108], 2, logger) # reseller price
                     metel_list_price = self.parse_text_number(
                         line[108:119], 2, logger) # public price
-                    #> moltiplicatore_prezzo = line[119:125]
-                    #currency = self.parse_text(line[125:128], logger)
+                    metel_multi_price = self.parse_text_number(
+                        line[119:125], logger)
+                    currency = self.parse_text(line[125:128], logger)
                     uom = self.parse_text_number(line[128:131], logger)
                     metel_kit = self.parse_text_boolean(line[131:132], logger)     
                     metel_state = self.parse_text(line[132:133], logger)
-                    #> last_variation = line[133:141], logger)
-                    #> discount_family = line[141:159], logger)
-                    #> statistic_family = line[159:177], logger)
+                    metel_last_variation = self.parse_text_dateline[133:141], 
+                        logger=logger)
+                    metel_discount = self.parse_text(line[141:159], logger)
+                    metel_statistic = self.parse_text(line[159:177], logger)
                     metel_electrocod = self.parse_text(
                         line[177:197], logger)
                     
@@ -148,6 +150,16 @@ class MetelBase(orm.Model):
                     metel_alternate_barcode_type = self.parse_text(
                         line[232:233], logger)
                     
+                    # TODO manage multi price value:
+                    #if metel_multi_price:
+                    #    metel_list_price /= metel_multi_price
+                    #    lst_price /= metel_multi_price
+                    
+                    # TODO use currency    
+                    
+                    # ---------------------------------------------------------
+                    # Create record data:
+                    # ---------------------------------------------------------
                     data = {
                         'default_code': default_code,
                         'metel_brand_code': brand_code,
@@ -160,9 +172,11 @@ class MetelBase(orm.Model):
                         'metel_order_min': metel_order_min,
                         'metel_order_max': metel_order_max,
                         'metel_order_leadtime': metel_order_leadtime,
+                        'metel_multi_price': metel_multi_price,    
                         'metel_list_price': metel_list_price,
                         'metel_kit': metel_kit,
                         'metel_state': metel_state,
+                        'metel_last_variation': metel_last_variation,
                         'metel_electrocod': metel_electrocod,
                         'metel_alternate_barcode': 
                             metel_alternate_barcode,
@@ -170,7 +184,7 @@ class MetelBase(orm.Model):
                             metel_alternate_barcode_type,
                         }
 
-                    # Add uom:    
+                    # Add uom:
                     uom_id = uom_db.get(uom, False)
                     if uom_id:
                         data['uom_id'] = uom_id

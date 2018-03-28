@@ -262,6 +262,8 @@ class ProductProduct(orm.Model):
             'product.category', 'Metel brand'),
         'metel_list_price': fields.float('Metel pricelist', 
             digits_compute=dp.get_precision('Product Price')),
+        'metel_multi_price': fields.integer('Multi price', 
+            help='When price is < 0.01 use multiplicator'),
         'metel_q_x_pack': fields.integer('Q. x pack'),            
         'metel_order_lot': fields.integer('Order lot'),
         'metel_order_min': fields.integer('Order min'),
@@ -271,6 +273,9 @@ class ProductProduct(orm.Model):
         'metel_brand_code': fields.char('Brand code', size=10),    
         'metel_producer_code': fields.char('Producer code', size=10),
         'metel_kit':fields.boolean('KIT'),
+        'metel_last_variation': fields.date('Last variation'),
+        'metel_discount': fields.char('Discount', size=20),    
+        'metel_statistic': fields.char('Statistic', size=20),    
 
         'metel_alternate_barcode': fields.char('Alternate barcode', size=50),    
         'metel_alternate_barcode_type': fields.char('Alternate barcode type', 
