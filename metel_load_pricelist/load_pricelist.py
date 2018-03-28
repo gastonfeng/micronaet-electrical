@@ -21,6 +21,7 @@ import os
 import sys
 import logging
 import openerp
+import shutil
 import openerp.netsvc as netsvc
 import openerp.addons.decimal_precision as dp
 from openerp.osv import fields, osv, expression, orm
@@ -63,6 +64,10 @@ class MetelBase(orm.Model):
         history_folder = os.path.expanduser(param_proxy.root_history_folder)
         log_folder = os.path.expanduser(param_proxy.root_log_folder)
 
+        # Now for name log:
+        now = '%s' % datetime.now()
+        now = now.replace('-', '_').replace(':', '.').replace('/', '.')
+
         # Mode list for file:        
         file_mode = [
             'LSP', #Public pricelist
@@ -103,7 +108,8 @@ class MetelBase(orm.Model):
                     _logger.info('Read METEL file: %s' % fullname)
                 i = upd = new = 0
                 uom_missed = []
-                for line in open(fullname, 'r'):
+                f_metel = open(fullname, 'r')
+                for line in f_metel:
                     i += 1
                     # ---------------------------------------------------------                    
                     # Header:
@@ -210,6 +216,18 @@ class MetelBase(orm.Model):
                             new += 1
                             _logger.info('%s. Create %s-%s' % (
                                 i, brand_code, default_code))
+                
+                f_metel.close()
+                
+                # -------------------------------------------------------------
+                # History log file
+                # -------------------------------------------------------------
+                if log_folder:
+                    log_fullname = os.path.join(
+                        log_folder, 
+                        '%s.%s' % (now, filename)
+                        )
+                    shutil.move(fullname, log_fullname)
                     
             break # only first root folder    
             if verbose:
@@ -220,12 +238,14 @@ class MetelBase(orm.Model):
                 _logger.info('UOM missed [%s]' % (uom_missed, ))
             if uom_missed:
                 logger.append(_('Missed UOM code: %s') % uom_missed)
+    
         
-        # 2. Import single file (parse, create/write)
-        
-        # 3. History 
-        
-        # 4. Log operation
+        # ---------------------------------------------------------------------    
+        # Log operation
+        # ---------------------------------------------------------------------    
+        if logger:
+            log_file = os.path.join(log_folder, filename)                
+            
         
         
         return True
