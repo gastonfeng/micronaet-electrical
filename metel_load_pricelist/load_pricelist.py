@@ -87,9 +87,10 @@ class MetelBase(orm.Model):
         # --------------------------------------------------------------------- 
         # 1. Loop pricelist folder:
         # TODO os.walk
-        logger = [] # List of error
         for root, dirs, files in os.walk(data_folder):
             for filename in files:
+                logger = [] # List of error (reset every file)
+                
                 # Parse filename:
                 file_producer_code = filename[3:6]
                 file_brand_code = filename[3:6]
@@ -222,12 +223,38 @@ class MetelBase(orm.Model):
                 # -------------------------------------------------------------
                 # History log file
                 # -------------------------------------------------------------
-                if log_folder:
-                    log_fullname = os.path.join(
-                        log_folder, 
+                if history_folder:
+                    history_fullname = os.path.join(
+                        history_folder, 
                         '%s.%s' % (now, filename)
                         )
-                    shutil.move(fullname, log_fullname)
+                    shutil.move(fullname, history_fullname) 
+                    if verbose:
+                        _logger.info(
+                            _('History imported file: %s >> %s') % (
+                                fullname, history_fullname))
+                else:
+                    logger.append(
+                        _('No history folder setup for move imported'))
+
+                # ---------------------------------------------------------------------    
+                # Log operation
+                # ---------------------------------------------------------------------    
+                if logger:
+                    if log_folder:
+                        log_file = os.path.join(
+                            log_folder, 
+                            '%s.%s' % (now, filename)
+                            )
+                        f_log = open(log_file, 'w')
+                        for line in logger:
+                            f_log.write(u'%s\n' % line)
+                        f_log.close()    
+                    else:    
+                        if verbose:
+                            _logger.info(_('Log folder not present!\nError: %s') % (
+                                logger))
+                    
                     
             break # only first root folder    
             if verbose:
@@ -238,16 +265,6 @@ class MetelBase(orm.Model):
                 _logger.info('UOM missed [%s]' % (uom_missed, ))
             if uom_missed:
                 logger.append(_('Missed UOM code: %s') % uom_missed)
-    
-        
-        # ---------------------------------------------------------------------    
-        # Log operation
-        # ---------------------------------------------------------------------    
-        if logger:
-            log_file = os.path.join(log_folder, filename)                
-            
-        
-        
         return True
         
     _columns = {
