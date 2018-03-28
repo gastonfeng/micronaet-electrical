@@ -133,7 +133,7 @@ class MetelBase(orm.Model):
                         line[80:85], logger)
                     metel_order_min = self.parse_text_number(line[85:90], logger)
                     metel_order_max = self.parse_text_number(line[90:96], logger)
-                    metel_order_leadtime = self.parse_text_number(line[96:97], logger)
+                    metel_leadtime = self.parse_text_number(line[96:97], logger)
                     lst_price = self.parse_text_number(
                         line[97:108], 2, logger) # reseller price
                     metel_list_price = self.parse_text_number(
@@ -179,7 +179,7 @@ class MetelBase(orm.Model):
                         'metel_order_lot': metel_order_lot,
                         'metel_order_min': metel_order_min,
                         'metel_order_max': metel_order_max,
-                        'metel_order_leadtime': metel_order_leadtime,
+                        'metel_leadtime': metel_leadtime,
                         'metel_multi_price': metel_multi_price,    
                         'metel_list_price': metel_list_price,
                         'metel_kit': metel_kit,
