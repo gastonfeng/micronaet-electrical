@@ -119,13 +119,13 @@ class MetelBase(orm.Model):
                     #> leadtime = self.parse_text_number(line[96:97])
                     lst_price = self.parse_text_number(
                         line[97:108], 2, logger) # reseller price
-                    #> metel_list_price = self.parse_text_number(
-                    #    line[108:119], 2, logger) # Public price
+                    metel_list_price = self.parse_text_number(
+                        line[108:119], 2, logger) # public price
                     #> moltiplicatore_prezzo = line[119:125]
                     #> codice_valuta = line[125:128]
                     #uom = line[128:131]
                     #> prodotto_composto = line[131:132]       
-                    #> metel_state = line[132:133]
+                    metel_state = self.parse_text_number(line[132:133], logger)
                     #> last_variation = line[133:141]
                     #> discount_family = line[141:159]
                     #> statistic_family = line[159:177]
@@ -140,6 +140,8 @@ class MetelBase(orm.Model):
                         'name': name,
                         'lst_price': lst_price,
                         'type': 'product', 
+                        'metel_list_price': metel_list_price,
+                        'metel_state': metel_state,
                         }
                     
                     product_ids = product_pool.search(cr, uid, [

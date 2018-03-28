@@ -61,6 +61,18 @@ class MetelMetel(orm.Model):
             logger.append('Error converting text %s' % text)
             return '?'
 
+    def parse_text_boolean(self, text, logger=None):
+        ''' Clean text
+            logger: logger list for collect error during import     
+        '''
+        if logger is None:
+            logger = []
+        try:    
+            return text.strip() == '1'
+        except:
+            logger.append('Error converting text boolean %s' % text)
+            return False
+
     def parse_text_number(self, text, decimal=0, logger=None):
         ''' Parse text value for float number according with METEL template           
             In METEL numbers has NN.DD format 
@@ -106,6 +118,17 @@ class MetelMetel(orm.Model):
         #else: # XXX no way always mode is present!
         return False
 
+    def load_parse_text_currency(self, cr, uid, context=None):
+        ''' Parse text value for currency ID according with METEL code
+        '''
+        res = {}
+        currency_pool = self.pool.get('res.currency')
+        currency_ids = currency_pool.search(cr, uid, [], context=context)
+        for currency in currency_pool.browse(cr, uid, currency_ids,
+                context=context):
+            res[currency.name] = currency.id
+        return res
+
     #def parse_text_country(self, value):
     #    ''' Parse text value for country ID according with METEL template           
     #    '''
@@ -114,6 +137,13 @@ class MetelMetel(orm.Model):
     #def parse_text_uom(self, value):
     #    ''' Parse text value for uom ID according with METEL template           
     #    '''
+    #    PCE Pezzi
+    #    BLI Blister
+    #    BRD Cartoni
+    #    KGM Chilogrammi
+    #    LE Litri
+    #    LM Metri lineari
+    #    PL Pallet
     #    return value
         
     _columns = {
@@ -224,6 +254,22 @@ class ProductProduct(orm.Model):
             digits_compute=dp.get_precision('Product Price')),
             
         'metel_brand_code': fields.char('Brand code', size=10),    
-        'metel_producer_code': fields.char('Producer code', size=10),    
+        'metel_producer_code': fields.char('Producer code', size=10),
+        'metel_state': fields.selection([
+            ('1', 'New product'),
+            ('2', 'Finished or to be cancel'),
+            ('3', 'Managed with stock'),
+            ('4', 'New service'),
+            ('5', 'Cancelled service'),
+            ('6', 'Produced with order'),
+            ('7', 'Produced with order to be cancelled'),
+            ('8', 'Service (no material)'),
+            ('9', 'Cancel product'),
+            ], 'Metel State', help='Status product in METEL'),
         }
+        
+    _defaults = {
+        # Default value:
+        'metel_state': lambda *x: '1',
+        }    
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
