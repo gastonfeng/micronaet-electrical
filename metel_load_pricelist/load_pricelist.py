@@ -117,8 +117,8 @@ class MetelBase(orm.Model):
                     i += 1
                     
                     # XXX Remove
-                    if i >= 100:
-                        break
+                    #if i >= 100:
+                    #    break
                     # ---------------------------------------------------------                    
                     # Header:
                     # ---------------------------------------------------------                    
@@ -247,15 +247,25 @@ class MetelBase(orm.Model):
                          ], context=context)
 
                     if product_ids: 
-                        product_pool.write(
-                            cr, uid, product_ids, data, context=context)
+                        try:
+                            product_pool.write(
+                                cr, uid, product_ids, data, context=context)
+                        except:
+                            logger.append(
+                                _('Error updating: %s' % default_code))
+                            continue
                         if verbose:
                             upd += 1
                             _logger.info('%s. Update %s-%s' % (
                                 i, brand_code, default_code))
                     else:        
-                        product_pool.create(
-                            cr, uid, data, context=context)
+                        try:
+                            product_pool.create(
+                                cr, uid, data, context=context)
+                        except:
+                            logger.append(
+                                _('Error updating: %s' % default_code))
+                            continue
                         if verbose:
                             new += 1
                             _logger.info('%s. Create %s-%s' % (
