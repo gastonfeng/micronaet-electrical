@@ -78,11 +78,15 @@ class ProductCategory(orm.Model):
         f_code = open(filename, 'r')
         i = 0
         levels = {} # saved with level        
-        for line in f_code:
+        line_text = f_code.read()
+        lines = line_text.split('\r')        
+        for line in lines:
             i += 1
-            if line[ec_check + 2: ec_check + 3] != '.': # Dot position
+            line = line.strip()
+            if line[ec_check + 2: ec_check + 3] != '.' and \
+                    line[ec_check + 3: ec_check + 4] != '-': # Dot position
                 continue # no data line
-            data = line[ec_check:].split('-')
+            data = line[ec_check:].split(' - ')
             if len(data) != 2:
                 _logger.error('No standard Electrocode line: %s' % line)
                 continue
@@ -108,10 +112,11 @@ class ProductCategory(orm.Model):
             root_name: root_id, # Not used only for collect correct key
             '': root_id, # Used with join no level
             }
-        for level in sorted(nodes):
-            for code, name in nodes[level].iteritems():
+
+        for level in sorted(levels):
+            for code, name in levels[level].iteritems():
                 code_part = code.split('.')
-                code_parent = '.'.join(code_part[:-1]
+                code_parent = '.'.join(code_part[:-1])
                 parent_id = nodes.get(code_parent, False)
                 if not parent_id:
                     _logger.error('Parent not found: %s' % code_parent)
@@ -129,6 +134,7 @@ class ProductCategory(orm.Model):
                         'electrocod_code': code,
                         'name': name,
                         }, context=context)
+                    _logger.info('Note create: %s' % code)    
         return nodes
 
     _columns = {
