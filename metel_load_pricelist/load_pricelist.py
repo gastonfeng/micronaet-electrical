@@ -206,24 +206,19 @@ class MetelBase(orm.Model):
                     # TODO use currency    
                     
                     # Category with Electrocod:                    
-                    categ_id = electrocod_db.get(metel_electrocod, False)
+                    # TODO create not found element!!!
+                    categ_id = electrocod_db.get(metel_electrocod, 1)
                     
                     # Create brand group:
                     if (file_producer_code, brand_code) in created_group: 
                         metel_brand_id = created_group[
                             (file_producer_code, brand_code)]
                     else:
-                        try:
-                            metel_brand_id = category_pool.get_create_brand_group(
-                                cr, uid, file_producer_code, brand_code, 
-                                brand_code, # name = code (modify in anagraphic)
-                                context=context)
-                        except:
-                            import pdb; pdb.set_trace()
-                            metel_brand_id = category_pool.get_create_brand_group(
-                                cr, uid, file_producer_code, brand_code, 
-                                brand_code, # name = code (modify in anagraphic)
-                                context=context)
+                        metel_brand_id = category_pool.get_create_brand_group(
+                            cr, uid, file_producer_code, brand_code, 
+                            brand_code, # name = code (modify in anagraphic)
+                            context=context)
+
                     # ---------------------------------------------------------
                     # Create record data:
                     # ---------------------------------------------------------
