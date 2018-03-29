@@ -33,6 +33,7 @@
         'base',
         'product',
         'excel_export', # Report XLSX
+        'metel_base', # Use metel category code
         ],
     'init_xml': [],
     'demo': [],
