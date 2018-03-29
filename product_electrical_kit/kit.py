@@ -46,6 +46,19 @@ class ProductProductKit(orm.Model):
     _rec_name = 'product_id'
     _order = 'product_id'
     
+    #def change_categ_id(self, cr, uid, ids, categ_id, context=None):
+    #    ''' Force product domain filter in present
+    #    '''
+    #    res = {}
+    #    if not categ_id:
+    #        return res
+    #    res['domain'] = {}
+    #    res['domain']['component_id'] = [
+    #        ('product_id', '!=', ids[0]), # TODO
+    #        ('metel_brand_id', '=', categ_id),
+    #        ]        
+    #    return res
+        
     _columns = {
         'product_id': fields.many2one('product.product', 'Product'),
         'component_id': fields.many2one(

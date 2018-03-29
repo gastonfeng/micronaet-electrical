@@ -10,7 +10,7 @@
                     <field name="product_id" invisible="context.get('embedded',False)"/>
                     <field name="component_id" domain="[('id', '!=', product_id)]"/>
                     <field name="qty" />
-                    <field name="categ_id" domain="[('parent_id.parent_id.metel_code', '=', 'METEL')]"/>
+                    <field name="categ_id" domain="[('parent_id.parent_id.metel_code', '=', 'METEL')]" /><!--on_change="change_categ_id(categ_id)"/>-->
                 </tree>
             </field>
         </record>
