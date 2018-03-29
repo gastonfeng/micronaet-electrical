@@ -84,6 +84,9 @@ class MetelBase(orm.Model):
                 Setup Electrocod parameter for get correct management!
                 (no group Electrocod structure created, no association with 
                 product created)''')
+        # If not fount Code category (new code) use a missed one!        
+        missed_id = category_pool.get_electrocod_category(
+            cr, uid, code='NOTFOUND', context=context)        
                 
         # Now for name log:
         now = '%s' % datetime.now()
@@ -205,10 +208,13 @@ class MetelBase(orm.Model):
                     
                     # TODO use currency    
                     
-                    # Category with Electrocod:                    
-                    # TODO create not found element!!!
-                    categ_id = electrocod_db.get(metel_electrocod, 1)
-                    
+                    # Category with Electrocod:
+                    if metel_electrocod:
+                        categ_id = electrocod_db.get(
+                            metel_electrocod, missed_id)                    
+                    else:    
+                        categ_id = missed_id 
+                        
                     # Create brand group:
                     if (file_producer_code, brand_code) in created_group: 
                         metel_brand_id = created_group[

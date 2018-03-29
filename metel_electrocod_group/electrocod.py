@@ -48,6 +48,23 @@ class ProductCategory(orm.Model):
     # -------------------------------------------------------------------------
     # Utility:
     # -------------------------------------------------------------------------
+    def get_electrocod_category(self, cr, uid, code='ELECTROCOD', 
+            name=False, parent_id=False, context=None):
+        ''' Create and return missed product category:
+        '''
+        group_ids = self.search(cr, uid, [
+            #('parent_id', '=', parent_id), # for search without parent_id
+            ('electrocod_code', '=', code),
+            ], context=context)
+        if group_ids:    
+            return group_ids[0]        
+        else:
+            return self.create(cr, uid, {
+                'parent_id': parent_id,
+                'electrocod_code': code,
+                'name': name or code or '?',
+                }, context=context)
+        
     def scheduled_electrocod_import_data(self, cr, uid, filename=False, 
             root_name='ELECTROCOD', ec_check=37, context=None):
         ''' Import all electrocod group structure 
@@ -56,22 +73,18 @@ class ProductCategory(orm.Model):
             ec_check: char in file where start code of electrocod
         '''
         _logger.info('Electrocod import!')
+        not_found = 'NOTFOUND'
 
         # ---------------------------------------------------------------------
         # Get or create root node:
         # ---------------------------------------------------------------------
-        group_ids = self.search(cr, uid, [
-            ('parent_id', '=', False),
-            ('electrocod_code', '=', root_name),
-            ], context=context)
-        if group_ids:    
-            root_id = group_ids[0]        
-        else:
-            root_id = self.create(cr, uid, {
-                'parent_id': False,
-                'electrocod_code': root_name,
-                'name': root_name,
-                }, context=context)
+        # Root category: ELECTROCOD
+        root_id = self.get_electrocod_category(
+            cr, uid, code=root_name, context=context)
+
+        # Missed category: NOTFOUND (create but not used here)    
+        missed_id = self.get_electrocod_category(
+            cr, uid, code='NOTFOUND', parent_id=root_id, context=context)
 
         # ---------------------------------------------------------------------
         # Read all file and save in database:
