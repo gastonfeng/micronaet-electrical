@@ -31,6 +31,7 @@
         'base',
         'product',
         'metel_base',
+        'metel_electrocod_group',
         ],
     'init_xml': [],
     'demo': [],

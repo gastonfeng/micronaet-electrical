@@ -55,6 +55,8 @@ class ProductCategory(orm.Model):
             root_name: Root group name and code (used as KEY!)
             ec_check: char in file where start code of electrocod
         '''
+        _logger.info('Electrocod import!')
+
         # ---------------------------------------------------------------------
         # Get or create root node:
         # ---------------------------------------------------------------------
@@ -80,11 +82,23 @@ class ProductCategory(orm.Model):
         levels = {} # saved with level        
         line_text = f_code.read()
         lines = line_text.split('\r')        
+        
+        code = False # Used also for append name splitted on next line
+        code_level = False
+        no_name_start = ('0', '1')
         for line in lines:
             i += 1
             line = line.strip()
             if line[ec_check + 2: ec_check + 3] != '.' and \
                     line[ec_check + 3: ec_check + 4] != '-': # Dot position
+                    
+                # Append part in new line for name:    
+                if line[0:1] not in no_name_start: # Part of name in new line                
+                    part = ' ' + ' '.join(filter(
+                        lambda x:x and x[:1] not in no_name_start, 
+                        line.split(' ')))
+                    levels[level][code] += part
+                    
                 continue # no data line
             data = line[ec_check:].split(' - ')
             if len(data) != 2:
@@ -95,7 +109,8 @@ class ProductCategory(orm.Model):
             # Manage level:    
             # -----------------------------------------------------------------
             code = data[0].strip()
-            name = data[1].strip()            
+            name = data[1].strip()
+
             code_level = code.split('.')
             level = len(code_level)
             
@@ -112,11 +127,11 @@ class ProductCategory(orm.Model):
             root_name: root_id, # Not used only for collect correct key
             '': root_id, # Used with join no level
             }
-
         for level in sorted(levels):
             for code, name in levels[level].iteritems():
                 code_part = code.split('.')
-                code_parent = '.'.join(code_part[:-1])
+                code_node = code.replace('.', '')
+                code_parent = ''.join(code_part[:-1]) # Code without .
                 parent_id = nodes.get(code_parent, False)
                 if not parent_id:
                     _logger.error('Parent not found: %s' % code_parent)
@@ -127,14 +142,21 @@ class ProductCategory(orm.Model):
                     ('electrocod_code', '=', code),
                     ], context=context)
                 if group_ids:
-                    nodes[code] = group_ids[0]      
-                else:
-                    nodes[code] = self.create(cr, uid, {
+                    self.write(cr, uid, group_ids[0], {
                         'parent_id': parent_id,
                         'electrocod_code': code,
                         'name': name,
                         }, context=context)
-                    _logger.info('Note create: %s' % code)    
+                    nodes[code_node] = group_ids[0]      
+                    _logger.info('Node update: [%s] %s' % (code, name))    
+                else:
+                    nodes[code_node] = self.create(cr, uid, {
+                        'parent_id': parent_id,
+                        'electrocod_code': code,
+                        'name': name,
+                        }, context=context)
+                    _logger.info('Node create: [%s] %s' % (code, name))    
+        _logger.info('Electrocod import end!')
         return nodes
 
     _columns = {

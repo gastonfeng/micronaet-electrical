@@ -11,6 +11,11 @@
                     <field name="root_data_folder" />
                     <field name="root_history_folder" />
                     <field name="root_log_folder" />
+                    
+                    <field name="electrocod_code" />
+                    <field name="electrocod_start_char" />
+                    <field name="electrocod_file" />
+                    
                 </field>
             </field>
         </record>

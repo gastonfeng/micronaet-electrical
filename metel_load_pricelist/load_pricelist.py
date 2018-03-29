@@ -64,7 +64,27 @@ class MetelBase(orm.Model):
         data_folder = os.path.expanduser(param_proxy.root_data_folder)
         history_folder = os.path.expanduser(param_proxy.root_history_folder)
         log_folder = os.path.expanduser(param_proxy.root_log_folder)
-
+        
+        # Electrocod data:
+        electrocod_code = param_proxy.electrocod_code
+        electrocod_start_char = param_proxy.electrocod_start_char
+        electrocod_file = param_proxy.electrocod_file
+        
+        if electrocod_code and electrocod_start_char and electrocod_file:
+            electrocod_file = os.path.expanduser(electrocod_file)
+            electrocod_db = category_pool.scheduled_electrocod_import_data(
+                cr, uid, 
+                filename=electrocod_file, 
+                root_name=electrocod_code, 
+                ec_check=electrocod_start_char, 
+                context=context)
+        else:
+            electrocod_db = {}
+            _logger.error('''
+                Setup Electrocod parameter for get correct management!
+                (no group Electrocod structure created, no association with 
+                product created)''')
+                
         # Now for name log:
         now = '%s' % datetime.now()
         now = now.replace('-', '_').replace(':', '.').replace('/', '.')
@@ -117,7 +137,7 @@ class MetelBase(orm.Model):
                     i += 1
                     
                     # XXX Remove
-                    #if i >= 100:
+                    #if i >= 200:
                     #    break
                     # ---------------------------------------------------------                    
                     # Header:
@@ -185,7 +205,9 @@ class MetelBase(orm.Model):
                     
                     # TODO use currency    
                     
-                    # TODO Create group for brand and producer
+                    # Category with Electrocod:                    
+                    categ_id = electrocod_db.get(metel_electrocod, False)
+                    
                     # Create brand group:
                     if (file_producer_code, brand_code) in created_group: 
                         metel_brand_id = created_group[
@@ -210,6 +232,7 @@ class MetelBase(orm.Model):
                         
                         'ean13': ean13,
                         'name': name,
+                        'categ_id': categ_id,
                         'lst_price': lst_price,
                         'type': 'product', 
                         'metel_q_x_pack': metel_q_x_pack,
@@ -333,6 +356,17 @@ class MetelBase(orm.Model):
         'root_history_folder': fields.char('History folder', size=120,
             help='~/.filestore/metel/history'),
         'root_log_folder': fields.char('Log folder', size=120,
-            help='~/.filestore/metel/log (every import create log)'),            
+            help='~/.filestore/metel/log (every import create log)'),
+
+        'electrocod_code': fields.char('Code', size=20,
+            help='Name and code for first root group'),
+        'electrocod_start_char': fields.integer('Start data char'),
+        'electrocod_file': fields.char('Electrodoc file', size=120,
+            help='~/.filestore/metel/electrocod.txt'),                     
         }
+        
+    _defaults = {
+        'electrocod_code': lambda *x: 'ELECTROCOD',
+        'electrocod_start_char': lambda *x: 37,
+        }    
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
