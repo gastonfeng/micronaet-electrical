@@ -200,6 +200,8 @@ class MetelBase(orm.Model):
                     metel_alternate_barcode_type = self.parse_text(
                         line[232:233], logger)
                     
+                    # Code = PRODUCER || CODE
+                    default_code = '%s%s' % (brand_code, default_code)
                     # TODO manage multi price value:
                     #if metel_multi_price:
                     #    metel_list_price /= metel_multi_price
@@ -286,8 +288,8 @@ class MetelBase(orm.Model):
                             continue
                         if verbose:
                             upd += 1
-                            _logger.info('%s. Update %s-%s' % (
-                                i, brand_code, default_code))
+                            _logger.info('%s. Update %s' % (
+                                i, default_code))
                     else:        
                         try:
                             product_pool.create(
@@ -298,8 +300,8 @@ class MetelBase(orm.Model):
                             continue
                         if verbose:
                             new += 1
-                            _logger.info('%s. Create %s-%s' % (
-                                i, brand_code, default_code))
+                            _logger.info('%s. Create %s' % (
+                                i, default_code))
                                                 
                 f_metel.close()
                 
