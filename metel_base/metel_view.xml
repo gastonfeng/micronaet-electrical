@@ -50,8 +50,8 @@
                     <field name="parent_id" domain="[('parent_id.parent_id.metel_code', '=', 'METEL')]" string="Brand"/><!--BRAND-->
                     <field name="metel_serie_id" />                    
                     <!--<field name="partner_id" filter_domain="[('partner_id','=',self)]"/>-->
-                    <filter name="metel_serie_id_no" string="With serie" domain="[('metel_serie_id','=',False)]"/>
-                    <filter name="metel_serie_id_yes" string="Withour serie" domain="[('metel_serie_id','!=',False)]"/>                    
+                    <filter name="metel_serie_id_no" string="With serie" domain="[('metel_serie_id','!=',False)]"/>
+                    <filter name="metel_serie_id_yes" string="Without serie" domain="[('metel_serie_id','=',False)]"/>                    
                     <group expand="0" string="Group By...">
                         <filter name="group_parent" string="Parent" context="{'group_by': 'parent_id'}"/>
                         <filter name="group_serie" string="Serie" context="{'group_by': 'metel_serie_id'}"/>
