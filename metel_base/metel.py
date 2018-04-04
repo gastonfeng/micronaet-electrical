@@ -249,6 +249,8 @@ class ProductCategory(orm.Model):
         'metel_serie_id': fields.many2one(
             'product.category', 'Metel serie',
             help='Serie for brand category, used for set up on product'),
+        'is_serie': fields.boolean('Is serie', 
+            help='This category is used as a Serie for product and brand'),
         }
 
 class ProductProduct(orm.Model):

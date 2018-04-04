@@ -30,11 +30,12 @@
             <field name="model">product.category</field>
             <field name="priority" eval="20"/>
             <field name="arch" type="xml">
-                <tree string="Metel statistic group" editable="bottom" color="blue:metel_serie_id==False">        
+                <tree string="Metel statistic group" editable="bottom" color="blue:metel_serie_id==False">
+                    <field name="is_serie" invisible="1" />        
                     <field name="name" readonly="1"/>
                     <field name="code" readonly="1" />
                     <field name="parent_id" readonly="1" />
-                    <field name="metel_serie_id" /><!--context="{}"-->
+                    <field name="metel_serie_id" context="{'default_parent_id': parent_id, 'default_is_serie': True}" domain="[('parent_id', '=', parent_id),('is_serie', '=', True)]" />
                 </tree>
             </field>
         </record>
