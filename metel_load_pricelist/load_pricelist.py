@@ -369,7 +369,6 @@ class MetelBase(orm.Model):
                         if verbose:
                             _logger.info(
                                 'Unmanaged file code: %s' % file_mode_code)
-                        
                                                 
                 # -------------------------------------------------------------
                 #                      COMMON PART:
