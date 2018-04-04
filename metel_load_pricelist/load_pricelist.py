@@ -341,26 +341,22 @@ class MetelBase(orm.Model):
                         # -----------------------------------------------------
                         category_ids = category_pool.search(cr, uid, [
                             ('parent_id', '=', metel_brand_id),
-                            #('metel_statistic', '=', metel_statistic),
-                            ('metel_code', '=', metel_statistic),
+                            ('metel_statistic', '=', metel_statistic),
+                            #('metel_code', '=', metel_statistic),
                             ], context=context)
+                        data = {
+                            'parent_id': metel_brand_id,
+                            #'metel_code': metel_statistic,
+                            'metel_statistic': metel_statistic,
+                            'name': name,
+                            }    
                         if category_ids:
                             metel_statistic_id = category_ids[0]    
                             category_pool.write(
-                                cr, uid, category_ids, {
-                                    'parent_id': metel_brand_id,
-                                    'metel_code': metel_statistic,
-                                    'metel_statistic': metel_statistic,
-                                    'name': name,
-                                    }, context=context)
+                                cr, uid, category_ids, data, context=context)
                         else:
                             metel_statistic_id = category_pool.create(
-                                cr, uid, {
-                                    'parent_id': metel_brand_id,
-                                    'metel_code': metel_statistic,
-                                    'metel_statistic': metel_statistic,
-                                    'name': name,
-                                    }, context=context)
+                                cr, uid, data, context=context)
                                 
                         # -----------------------------------------------------
                         # Update product:
