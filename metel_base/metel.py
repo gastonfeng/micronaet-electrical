@@ -249,6 +249,7 @@ class ProductCategory(orm.Model):
         'metel_serie_id': fields.many2one(
             'product.category', 'Metel serie',
             help='Serie for brand category, used for set up on product'),
+        'metel_statistic': fields.char('Statistic code', size=20),    
         'is_serie': fields.boolean('Is serie', 
             help='This category is used as a Serie for product and brand'),
         }
