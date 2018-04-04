@@ -313,13 +313,20 @@ class MetelBase(orm.Model):
                     # ---------------------------------------------------------
                     #                    MODE: FST (Statistic family)
                     # ---------------------------------------------------------
-                    elif file_mode_code == 'FST':
+                    elif file_mode_code in ('FST', 'FSC'):
+                        if file_mode_code == 'FST':
+                            field = 'metel_statistic'
+                            field_id = 'metel_statistic_id'
+                        else:
+                            field = 'metel_discount'
+                            field_id = 'metel_discount_id'
+                                
                         # Data row:
                         producer_code = self.parse_text(
                             line[0:3], logger)
                         brand_code = self.parse_text(
                             line[3:6], logger)
-                        metel_statistic = self.parse_text(
+                        metel_code = self.parse_text(
                             line[6:24], logger)
                         name = self.parse_text(
                             line[24:], logger)
@@ -341,21 +348,20 @@ class MetelBase(orm.Model):
                         # -----------------------------------------------------
                         category_ids = category_pool.search(cr, uid, [
                             ('parent_id', '=', metel_brand_id),
-                            ('metel_statistic', '=', metel_statistic),
-                            #('metel_code', '=', metel_statistic),
+                            (field, '=', metel_code),
                             ], context=context)
                         data = {
                             'parent_id': metel_brand_id,
-                            #'metel_code': metel_statistic,
-                            'metel_statistic': metel_statistic,
+                            #'metel_code': metel_code,
+                            field: metel_code,
                             'name': name,
                             }    
                         if category_ids:
-                            metel_statistic_id = category_ids[0]    
+                            metel_code_id = category_ids[0]    
                             category_pool.write(
                                 cr, uid, category_ids, data, context=context)
                         else:
-                            metel_statistic_id = category_pool.create(
+                            metel_code_id = category_pool.create(
                                 cr, uid, data, context=context)
                                 
                         # -----------------------------------------------------
@@ -364,24 +370,25 @@ class MetelBase(orm.Model):
                         product_ids = product_pool.search(cr, uid, [
                             ('metel_producer_code', '=', producer_code),
                             ('metel_brand_code', '=', brand_code),                            
-                            ('metel_statistic', '=', metel_statistic),
+                            (field, '=', metel_code),
                             ], context=context)
                             
-                        data = {'metel_statistic_id': metel_statistic_id, }
+                        data = {field_id: metel_code_id, }
                         
-                        # Get also series from statistic category:    
-                        metel_statistic_proxy = category_pool.browse(
-                            cr, uid, metel_statistic_id, context=context)
-                        if metel_statistic_proxy.metel_serie_id:
-                            data['metel_serie_id'] = \
-                                metel_statistic_proxy.metel_serie_id.id
+                        # Update series fron statistic (if FST)
+                        if file_mode_code == 'FST':
+                            metel_statistic_proxy = category_pool.browse(
+                                cr, uid, metel_code_id, context=context)
+                            if metel_statistic_proxy.metel_serie_id:
+                                data['metel_serie_id'] = \
+                                    metel_statistic_proxy.metel_serie_id.id
     
                         product_pool.write(cr, uid, product_ids, data, 
                             context=context)    
 
                         if verbose:
                             _logger.info('%s. Update # %s with %s' % (
-                                i, len(product_ids), metel_statistic))
+                                i, len(product_ids), metel_code))
 
                     # ---------------------------------------------------------
                     #                    MODE: UNMANAGED!

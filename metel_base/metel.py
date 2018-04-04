@@ -250,6 +250,7 @@ class ProductCategory(orm.Model):
             'product.category', 'Metel serie',
             help='Serie for brand category, used for set up on product'),
         'metel_statistic': fields.char('Statistic code', size=20),    
+        'metel_discount': fields.char('Discount code', size=20),    
         'is_serie': fields.boolean('Is serie', 
             help='This category is used as a Serie for product and brand'),
         }
@@ -290,8 +291,8 @@ class ProductProduct(orm.Model):
         'metel_kit':fields.boolean('KIT'),
         'metel_last_variation': fields.date('Last variation'),
         'metel_discount': fields.char('Discount', size=20),    
-        #'metel_discount_id': fields.many2one(
-        #    'product.category', 'Metel discount'),
+        'metel_discount_id': fields.many2one(
+            'product.category', 'Metel discount'),
         'metel_statistic': fields.char('Statistic', size=20),    
         'metel_statistic_id': fields.many2one(
             'product.category', 'Metel statistic'),
