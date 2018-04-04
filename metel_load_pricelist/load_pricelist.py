@@ -254,6 +254,8 @@ class MetelBase(orm.Model):
                         'metel_kit': metel_kit,
                         'metel_state': metel_state,
                         'metel_last_variation': metel_last_variation,
+                        'metel_discount': metel_discount,
+                        'metel_statistic': metel_statistic,                        
                         'metel_electrocod': metel_electrocod,
                         'metel_alternate_barcode': 
                             metel_alternate_barcode,
