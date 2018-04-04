@@ -324,7 +324,9 @@ class MetelBase(orm.Model):
                         name = self.parse_text(
                             line[24:], logger)
                         
+                        # -----------------------------------------------------
                         # Create brand group:
+                        # -----------------------------------------------------
                         if (file_producer_code, brand_code) in created_group: 
                             metel_brand_id = created_group[
                                 (file_producer_code, brand_code)]
@@ -334,7 +336,9 @@ class MetelBase(orm.Model):
                                     cr, uid, file_producer_code, brand_code, 
                                     brand_code, context=context)
                         
+                        # -----------------------------------------------------
                         # Crete or get statistic category:            
+                        # -----------------------------------------------------
                         category_ids = category_pool.search(cr, uid, [
                             ('parent_id', '=', metel_brand_id),
                             ('metel_code', '=', metel_statistic),
@@ -342,21 +346,32 @@ class MetelBase(orm.Model):
                         if category_ids:
                             metel_statistic_id = category_ids[0]    
                         else:
-                            metel_statistic_id = category_pool.create(cr, uid, {
-                                'parent_id': metel_brand_id,
-                                'metel_code': metel_statistic,
-                                'name': name,
-                                }, context=context)
+                            metel_statistic_id = category_pool.create(
+                                cr, uid, {
+                                    'parent_id': metel_brand_id,
+                                    'metel_code': metel_statistic,
+                                    'name': name,
+                                    }, context=context)
                                 
+                        # -----------------------------------------------------
                         # Update product:
+                        # -----------------------------------------------------
                         product_ids = product_pool.search(cr, uid, [
                             ('metel_producer_code', '=', producer_code),
                             ('metel_brand_code', '=', brand_code),                            
                             ('metel_statistic', '=', metel_statistic),
                             ], context=context)
-                        product_pool.write(cr, uid, product_ids, {
-                            'metel_statistic_id': metel_statistic_id,
-                            }, context=context)    
+                            
+                        data = {'metel_statistic_id': metel_statistic_id, }
+                        # Get also series from statistic category:    
+                        metel_statistic_proxy = category_pool.browse(
+                            cr, uid, metel_brand_id, context=context)
+                        if metel_statistic_proxy.metel_serie_id:
+                            data['metel_serie_id'] = \
+                                metel_statistic_proxy.metel_serie_id.id
+    
+                        product_pool.write(cr, uid, product_ids, data, 
+                            context=context)    
 
                         if verbose:
                             _logger.info('%s. Update # %s with %s' % (
