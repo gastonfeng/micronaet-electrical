@@ -246,6 +246,9 @@ class ProductCategory(orm.Model):
         'metel_partner_id': fields.many2one(
             'res.partner', 'Metel Partner', 
             help='If group is a producer element'),
+        'metel_serie_id': fields.many2one(
+            'product.category', 'Metel serie',
+            help='Serie for brand category, used for set up on product'),
         }
 
 class ProductProduct(orm.Model):

@@ -24,6 +24,50 @@
             </field>
         </record>
         
+        <!--product.category-->
+        <record model="ir.ui.view" id="view_product_category_statistic_tree">
+            <field name="name">product.category.statistic.tree</field>
+            <field name="model">product.category</field>
+            <field name="priority" eval="20"/>
+            <field name="arch" type="xml">
+                <tree string="Metel statistic group" editable="bottom" color="blue:metel_serie_id==False">        
+                    <field name="name" readonly="1"/>
+                    <field name="code" readonly="1" />
+                    <field name="parent_id" readonly="1" />
+                    <field name="metel_serie_id" /><!--context="{}"-->
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_product_category_search">
+            <field name="name">product.category.statistic.search</field>
+            <field name="model">product.category</field>
+            <field name="priority" eval="20"/>
+            <field name="arch" type="xml">
+                <search string="Metel statistic group" version="7.0">        
+                    <field name="name" />
+                    <field name="code" />
+                    <field name="parent_id" />
+                    <field name="metel_serie_id" />                    
+                    <!--<field name="partner_id" filter_domain="[('partner_id','=',self)]"/>-->
+                    <filter name="metel_serie_id_no" string="With serie" domain="[('metel_serie_id','=',False)]"/>
+                    <filter name="metel_serie_id_yes" string="Withour serie" domain="[('metel_serie_id','!=',False)]"/>                    
+                    <group expand="0" string="Group By...">
+                        <filter name="group_parent" string="Parent" context="{'group_by': 'parent_id'}"/>
+                        <filter name="group_serie" string="Serie" context="{'group_by': 'metel_serie_id'}"/>
+                    </group>                
+                </search>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="action_product_category_statistic_form">
+            <field name="name">Statistic category</field>
+            <field name="res_model">product.category</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_product_category_statistic_tree"/>
+            <field name="context">{}</field>
+            <field name="domain">[('parent_id.parent_id.parent_id.metel_code', '=', 'METEL')]</field>
+        </record>
+        
         <!-- product.product-->
         <record model="ir.ui.view" id="view_product_product_metel_page_form">
             <field name="name">product.product.metel.form</field>
@@ -66,9 +110,7 @@
                             <field name="metel_discount" readonly="1" />
                             <field name="metel_statistic" readonly="1" />
                             
-                            <field name="metel_statistic_id" readonly="1" />
-                            <newline/>
-                            
+                            <field name="metel_statistic_id" readonly="1" colspan="4"/>
 
                             <field name="metel_order_min" readonly="1" />
                             <field name="metel_order_max" readonly="1" />
@@ -156,6 +198,13 @@
                 action="action_metel_parameter_tree"
                 sequence="10"
                 />
+            <menuitem 
+                parent="menu_action_metel_root" 
+                id="menu_action_product_category_statistic_form" 
+                action="action_product_category_statistic_form"
+                sequence="20"
+                />
+                 
         
 
     </data>
