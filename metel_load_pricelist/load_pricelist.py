@@ -346,6 +346,13 @@ class MetelBase(orm.Model):
                             ], context=context)
                         if category_ids:
                             metel_statistic_id = category_ids[0]    
+                            category_pool.write(
+                                cr, uid, category_ids, {
+                                    'parent_id': metel_brand_id,
+                                    'metel_code': metel_statistic,
+                                    'metel_statistic': metel_statistic,
+                                    'name': name,
+                                    }, context=context)
                         else:
                             metel_statistic_id = category_pool.create(
                                 cr, uid, {
