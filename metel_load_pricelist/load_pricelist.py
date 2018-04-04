@@ -358,6 +358,10 @@ class MetelBase(orm.Model):
                             'metel_statistic_id': metel_statistic_id,
                             }, context=context)    
 
+                        if verbose:
+                            _logger.info('%s. Update # %s with %s' % (
+                                i, len(product_ids), metel_statistic))
+
                     # ---------------------------------------------------------
                     #                    MODE: UNMANAGED!
                     # ---------------------------------------------------------
