@@ -66,6 +66,10 @@
                             <field name="metel_discount" readonly="1" />
                             <field name="metel_statistic" readonly="1" />
                             
+                            <field name="metel_statistic_id" readonly="1" />
+                            <newline/>
+                            
+
                             <field name="metel_order_min" readonly="1" />
                             <field name="metel_order_max" readonly="1" />
 
@@ -87,6 +91,7 @@
                     <field name="metel_producer_id" invisible="1" />
                     <field name="metel_brand_id" invisible="1" />
                     <field name="metel_serie_id" invisible="1"/>
+                    <field name="metel_statistic_id" invisible="1"/>                       
                 </field>
             </field>
         </record>        
@@ -101,6 +106,7 @@
                     <field name="metel_producer_id" />
                     <field name="metel_brand_id" />                                 
                     <field name="metel_serie_id" />                       
+                    <field name="metel_statistic_id" />                       
                     <field name="metel_last_variation" />
 
                     <filter name="product_metel" string="METEL" domain="[('is_metel','=',True)]"/>
@@ -110,6 +116,7 @@
                     <filter string='METEL Producer' name="group_metel_producer" domain="[]" context="{'group_by': 'metel_producer_id'}"/>
                     <filter string='METEL Brand' name="group_metel_brand" domain="[]" context="{'group_by': 'metel_brand_id'}"/>
                     <filter string='METEL Serie' name="group_metel_serie" domain="[]" context="{'group_by': 'metel_serie_id'}"/>
+                    <filter string='METEL Statistic' name="group_metel_statistic" domain="[]" context="{'group_by': 'metel_statistic_id'}"/>
                     <filter string='METEL State' name="group_metel_state" domain="[]" context="{'group_by': 'metel_state'}"/>
                     <filter string='METEL Last variation' name="group_metel_variation" domain="[]" context="{'group_by' : 'metel_last_variation'}"/>
                     <filter string='METEL KIT' name="group_metel_kit" domain="[]" context="{'group_by': 'metel_kit'}"/>

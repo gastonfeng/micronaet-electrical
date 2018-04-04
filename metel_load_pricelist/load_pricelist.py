@@ -150,9 +150,9 @@ class MetelBase(orm.Model):
                         continue
 
                     # ---------------------------------------------------------
-                    #                    MODE: LST (Pricelist full)
+                    #                    MODE: LSP (Pricelist full)
                     # ---------------------------------------------------------
-                    if file_mode_code == 'LST':                        
+                    if file_mode_code == 'LSP':                        
                     
                         # Data row:
                         brand_code = self.parse_text(
@@ -351,12 +351,12 @@ class MetelBase(orm.Model):
                                 
                         # Update product:
                         product_ids = product_pool.search(cr, uid, [
-                            ('metel_producer', '=', producer_code),
-                            ('metel_brand', '=', brand_code),                            
+                            ('metel_producer_code', '=', producer_code),
+                            ('metel_brand_code', '=', brand_code),                            
                             ('metel_statistic', '=', metel_statistic),
                             ], context=context)
                         product_pool.write(cr, uid, product_ids, {
-                            'metel_statistic_id', '=', metel_statistic_id,
+                            'metel_statistic_id': metel_statistic_id,
                             }, context=context)    
 
                     # ---------------------------------------------------------
