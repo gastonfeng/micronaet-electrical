@@ -284,7 +284,11 @@ class ProductProduct(orm.Model):
         'metel_kit':fields.boolean('KIT'),
         'metel_last_variation': fields.date('Last variation'),
         'metel_discount': fields.char('Discount', size=20),    
+        #'metel_discount_id': fields.many2one(
+        #    'product.category', 'Metel discount'),
         'metel_statistic': fields.char('Statistic', size=20),    
+        'metel_statistic_id': fields.many2one(
+            'product.category', 'Metel statistic'),
 
         'metel_alternate_barcode': fields.char('Alternate barcode', size=50),    
         'metel_alternate_barcode_type': fields.char('Alternate barcode type', 
