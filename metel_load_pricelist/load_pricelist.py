@@ -314,7 +314,6 @@ class MetelBase(orm.Model):
                     #                    MODE: FST (Statistic family)
                     # ---------------------------------------------------------
                     elif file_mode_code == 'FST':
-                        import pdb; pdb.set_trace()               
                         # Data row:
                         producer_code = self.parse_text(
                             line[0:3], logger)
