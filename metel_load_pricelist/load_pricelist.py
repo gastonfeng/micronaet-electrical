@@ -117,14 +117,14 @@ class MetelBase(orm.Model):
                 
                 # Parse filename:
                 file_producer_code = filename[:3]
-                file_brand_code = filename[3:6]
+                file_mode_code = filename[3:6]
                 # TODO version?
                 currency = (filename.split('.')[0])[6:]
                 metel_producer_id = category_pool.get_create_producer_group(
                     cr, uid, file_producer_code, file_producer_code,
                     context=context)
                 fullname = os.path.join(root, filename)                
-                if file_brand_code not in file_mode:
+                if file_mode_code not in file_mode:
                     if verbose:
                         _logger.info('Jump METEL file: %s (not in %s)' % (
                             fullname, file_mode,
