@@ -24,13 +24,14 @@
             </field>
         </record>
         
+                              <!--STATISTIC FAMILY:-->
         <!--product.category-->
         <record model="ir.ui.view" id="view_product_category_statistic_tree">
             <field name="name">product.category.statistic.tree</field>
             <field name="model">product.category</field>
             <field name="priority" eval="20"/>
             <field name="arch" type="xml">
-                <tree string="Metel statistic group" editable="bottom" color="blue:metel_serie_id==False">
+                <tree string="Metel statistic group" editable="bottom" colors="blue:metel_serie_id==False">
                     <field name="is_serie" invisible="1" />        
                     <field name="name" readonly="1"/>
                     <field name="metel_statistic" readonly="1" />
@@ -68,6 +69,46 @@
             <field name="search_view_id" ref="view_product_category_statistic_search"/>
             <field name="context">{}</field>
             <field name="domain">[('parent_id.parent_id.parent_id.metel_code', '=', 'METEL'),('metel_statistic', '!=', False)]</field>
+        </record>
+                              <!--DISCOUNT FAMILY:-->
+        <!--product.category-->
+        <record model="ir.ui.view" id="view_product_category_discount_tree">
+            <field name="name">product.category.discount.tree</field>
+            <field name="model">product.category</field>
+            <field name="priority" eval="20"/>
+            <field name="arch" type="xml">
+                <tree string="Metel discount group" editable="bottom">
+                    <field name="is_serie" invisible="1" />        
+                    <field name="name" readonly="1"/>
+                    <field name="metel_discount" readonly="1" />
+                    <field name="parent_id" readonly="1" string="Brand"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_product_category_discount_search">
+            <field name="name">product.category.discount.search</field>
+            <field name="model">product.category</field>
+            <field name="priority" eval="20"/>
+            <field name="arch" type="xml">
+                <search string="Metel discount group" version="7.0">        
+                    <field name="name" />
+                    <field name="metel_discount" />
+                    <field name="parent_id" domain="[('parent_id.parent_id.metel_code', '=', 'METEL')]" string="Brand"/><!--BRAND-->
+                    <group expand="0" string="Group By...">
+                        <filter name="group_parent" string="Parent" context="{'group_by': 'parent_id'}"/>
+                    </group>                
+                </search>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="action_product_category_discount_form">
+            <field name="name">Discount category</field>
+            <field name="res_model">product.category</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_product_category_discount_tree"/>
+            <field name="search_view_id" ref="view_product_category_discount_search"/>
+            <field name="context">{}</field>
+            <field name="domain">[('parent_id.parent_id.parent_id.metel_code', '=', 'METEL'),('metel_discount', '!=', False)]</field>
         </record>
         
         <!-- product.product-->
@@ -206,7 +247,12 @@
                 action="action_product_category_statistic_form"
                 sequence="20"
                 />
-                 
+            <menuitem 
+                parent="menu_action_metel_root" 
+                id="menu_action_product_category_discount_form" 
+                action="action_product_category_discount_form"
+                sequence="30"
+                />
         
 
     </data>
