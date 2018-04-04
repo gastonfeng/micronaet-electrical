@@ -341,8 +341,8 @@ class MetelBase(orm.Model):
                         # -----------------------------------------------------
                         category_ids = category_pool.search(cr, uid, [
                             ('parent_id', '=', metel_brand_id),
-                            ('metel_code', '=', metel_statistic),
-                            #TODO ('metel_statistic', '=', metel_statistic),
+                            ('metel_statistic', '=', metel_statistic),
+                            #TODO remove: ('metel_code', '=', metel_statistic),
                             ], context=context)
                         if category_ids:
                             metel_statistic_id = category_ids[0]    
