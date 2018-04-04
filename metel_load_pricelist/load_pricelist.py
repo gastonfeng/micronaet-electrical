@@ -368,9 +368,10 @@ class MetelBase(orm.Model):
                             ], context=context)
                             
                         data = {'metel_statistic_id': metel_statistic_id, }
+                        
                         # Get also series from statistic category:    
                         metel_statistic_proxy = category_pool.browse(
-                            cr, uid, metel_brand_id, context=context)
+                            cr, uid, metel_statistic_id, context=context)
                         if metel_statistic_proxy.metel_serie_id:
                             data['metel_serie_id'] = \
                                 metel_statistic_proxy.metel_serie_id.id
