@@ -260,6 +260,8 @@ class ProductProduct(orm.Model):
             'product.category', 'Metel producer'),
         'metel_brand_id': fields.many2one(
             'product.category', 'Metel brand'),
+        'metel_serie_id': fields.many2one(
+            'product.category', 'Metel serie'),
          
         # Price:    
         'metel_list_price': fields.float('Metel pricelist', 
