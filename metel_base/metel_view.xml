@@ -34,7 +34,6 @@
                     <field name="is_serie" invisible="1" />        
                     <field name="name" readonly="1"/>
                     <field name="metel_statistic" readonly="1" />
-                    <field name="metel_code" readonly="1" />
                     <field name="parent_id" readonly="1" string="Statistic category"/>
                     <field name="metel_serie_id" context="{'default_parent_id': parent_id, 'default_is_serie': True}" domain="[('parent_id', '=', parent_id),('is_serie', '=', True)]" />
                 </tree>
@@ -66,6 +65,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_product_category_statistic_tree"/>
+            <field name="search_view_id" ref="view_product_category_search"/>
             <field name="context">{}</field>
             <field name="domain">[('parent_id.parent_id.parent_id.metel_code', '=', 'METEL')]</field>
         </record>
