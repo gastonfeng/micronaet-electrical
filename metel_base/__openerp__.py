@@ -37,6 +37,8 @@
     'data': [
         'security/ir.model.access.csv',    
         'metel_view.xml',
+        
+        'wizard/assign_serie_wizard_view.xml',
         ],
     'active': False,
     'installable': True,

@@ -251,25 +251,19 @@ class ProductCategory(orm.Model):
             help='Serie for brand category, used for set up on product'),
         'metel_statistic': fields.char('Statistic code', size=20),    
         'metel_discount': fields.char('Discount code', size=20),    
+        # TODO remove is_serie management, use metel_mode
         'is_serie': fields.boolean('Is serie', 
             help='This category is used as a Serie for product and brand'),
         # TODO manage group mode in creation:    
-        'metel_mode': fields.selection([
-            # Level 1:
-            ('metel', 'Metel'),
+        'metel_mode': fields.selection([            
+            ('metel', 'Metel'), # Level 1:            
+            ('producer', 'Producer'), # Level 2:            
+            ('brand', 'Brand'), # Level 3:
+                        
+            ('discount', 'Discount category'), # Level 4: 
+            ('statistic', 'Statistic category'), # Level 4: 
             
-            # Level 2:
-            ('producer', 'Producer'),
-            
-            # Level 3:
-            ('brand', 'Brand'),
-            
-            # Level 4: 
-            ('discount', 'Discount category'),
-            ('statistic', 'Statistic category'),
-            
-            # Level 5:
-            ('serie', 'Serie'),
+            ('serie', 'Serie'), # Level 5:
             ], 'Metel Mode'),
         }
 
