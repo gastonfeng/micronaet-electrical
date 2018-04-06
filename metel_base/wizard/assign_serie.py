@@ -62,6 +62,8 @@ class MetelAssignSerieWizard(orm.TransientModel):
             }
 
     _columns = {
+        'serie_id': fields.many2one(
+            'product.category', 'Serie', required=True),
         }
         
     _defaults = {
