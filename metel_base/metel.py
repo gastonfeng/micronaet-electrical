@@ -253,6 +253,24 @@ class ProductCategory(orm.Model):
         'metel_discount': fields.char('Discount code', size=20),    
         'is_serie': fields.boolean('Is serie', 
             help='This category is used as a Serie for product and brand'),
+        # TODO manage group mode in creation:    
+        'metel_mode': fields.selection([
+            # Level 1:
+            ('metel', 'Metel'),
+            
+            # Level 2:
+            ('producer', 'Producer'),
+            
+            # Level 3:
+            ('brand', 'Brand'),
+            
+            # Level 4: 
+            ('discount', 'Discount category'),
+            ('statistic', 'Statistic category'),
+            
+            # Level 5:
+            ('serie', 'Serie'),
+            ], 'Metel Mode'),
         }
 
 class ProductProduct(orm.Model):

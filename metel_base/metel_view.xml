@@ -253,7 +253,6 @@
                 action="action_product_category_discount_form"
                 sequence="30"
                 />
-        
 
     </data>
 </openerp>

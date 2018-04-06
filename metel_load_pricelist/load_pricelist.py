@@ -314,6 +314,7 @@ class MetelBase(orm.Model):
                     #                    MODE: FST (Statistic family)
                     # ---------------------------------------------------------
                     elif file_mode_code in ('FST', 'FSC'):
+                        import pdb; pdb.set_trace()
                         if file_mode_code == 'FST':
                             field = 'metel_statistic'
                             field_id = 'metel_statistic_id'
@@ -322,17 +323,13 @@ class MetelBase(orm.Model):
                             field_id = 'metel_discount_id'
                                 
                         # Data row:
-                        producer_code = self.parse_text(
-                            line[0:3], logger)
-                        brand_code = self.parse_text(
-                            line[3:6], logger)
-                        metel_code = self.parse_text(
-                            line[6:24], logger)
-                        name = self.parse_text(
-                            line[24:], logger)
+                        producer_code = self.parse_text(line[0:3], logger)
+                        brand_code = self.parse_text(line[3:6], logger)
+                        metel_code = self.parse_text(line[6:24], logger)
+                        name = self.parse_text(line[24:], logger)
                         
                         # -----------------------------------------------------
-                        # Create brand group:
+                        # Create producer > brand groups:
                         # -----------------------------------------------------
                         if (file_producer_code, brand_code) in created_group: 
                             metel_brand_id = created_group[
@@ -352,7 +349,6 @@ class MetelBase(orm.Model):
                             ], context=context)
                         data = {
                             'parent_id': metel_brand_id,
-                            #'metel_code': metel_code,
                             field: metel_code,
                             'name': name,
                             }    
