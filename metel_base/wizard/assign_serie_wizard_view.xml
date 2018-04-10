@@ -19,13 +19,23 @@
             </field>
       </record>
 
-      <record model="ir.actions.act_window" id="action__wizard_form">
+      <record model="ir.actions.act_window" id="action_assign_metel_serie_wizard">
           <field name="name">Assign serie to statistic</field>
           <field name="res_model">metel.assign.serie.wizard</field>
           <field name="view_type">form</field>
           <field name="view_mode">form</field>
           <field name="target">new</field>
           <field name="view_id" ref="assign_metel_serie_wizard_view"/>
-      </record> 
+      </record>      
+      <act_window
+          id="act_assign_metel_serie_wizard"
+          name="Assign serie"
+          res_model="metel.assign.serie.wizard"
+          src_model="product.category"
+          view_mode="form"
+          view_type="form"
+          target="new"
+          multi="1"
+          />
     </data>
 </openerp>

@@ -57,12 +57,17 @@ class ProductCategory(orm.Model):
             ('electrocod_code', '=', code),
             ], context=context)
         if group_ids:    
+            # Update:
+            self.write(cr, uid, group_ids, {
+                'metel_mode': 'electrocod',
+                }, context=context)
             return group_ids[0]        
         else:
             return self.create(cr, uid, {
                 'parent_id': parent_id,
                 'electrocod_code': code,
                 'name': name or code or '?',
+                'metel_mode': 'electrocod',
                 }, context=context)
         
     def scheduled_electrocod_import_data(self, cr, uid, filename=False, 
@@ -154,20 +159,19 @@ class ProductCategory(orm.Model):
                     ('parent_id', '=', parent_id),
                     ('electrocod_code', '=', code),
                     ], context=context)
+                data = {
+                    'parent_id': parent_id,
+                    'electrocod_code': code,
+                    'name': name,
+                    'metel_mode': 'electrocod',
+                    }
                 if group_ids:
-                    self.write(cr, uid, group_ids[0], {
-                        'parent_id': parent_id,
-                        'electrocod_code': code,
-                        'name': name,
-                        }, context=context)
+                    self.write(cr, uid, group_ids[0], data, context=context)
                     nodes[code_node] = group_ids[0]      
                     _logger.info('Node update: [%s] %s' % (code, name))    
                 else:
-                    nodes[code_node] = self.create(cr, uid, {
-                        'parent_id': parent_id,
-                        'electrocod_code': code,
-                        'name': name,
-                        }, context=context)
+                    nodes[code_node] = self.create(cr, uid, data, 
+                        context=context)
                     _logger.info('Node create: [%s] %s' % (code, name))    
         _logger.info('Electrocod import end!')
         return nodes

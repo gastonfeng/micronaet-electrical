@@ -192,7 +192,7 @@ class ProductCategory(orm.Model):
     # Utility:
     # -------------------------------------------------------------------------
     def get_create_metel_group(self, cr, uid, code, name=False, 
-            parent_id=False, context=None):
+            parent_id=False, metel_mode=False, context=None):
         ''' Get (or create if not present) producer "code" and "name"
         '''
         group_ids = self.search(cr, uid, [
@@ -202,26 +202,35 @@ class ProductCategory(orm.Model):
         if group_ids:
             if len(group_ids) > 1:
                 _logger.error(_('Code present more than one! [%s]') % code)
+
+            # Update metel mode: XXX (removeable)    
+            self.write(cr, uid, group_ids, {
+                'metel_mode': metel_mode,
+                }, context=context)
             return group_ids[0]
         else:
-            return self.create(cr, uid, {
+            data = {
                 'parent_id': parent_id,
                 'metel_code': code,
                 'name': name or code or '',
-                }, context=context)
+                'metel_mode': metel_mode,
+                }
+    
+            return self.create(cr, uid, data, context=context)
     
     # Producer group ID:
     def get_create_producer_group(self, cr, uid, 
             producer_code, producer_name=False, context=None):
+        ''' Create producer group
         '''
-        '''    
         # Parent root:
         metel_id = self.get_create_metel_group(cr, uid, 
-            'METEL', context=context)
+            'METEL', metel_mode='metel', context=context)
 
         # Producer:
         return self.get_create_metel_group(cr, uid, 
-            producer_code, producer_name, metel_id, context=context)
+            producer_code, producer_name, metel_id, metel_mode='producer', 
+            context=context)
 
     # Brand group ID:
     def get_create_brand_group(self, cr, uid, 
@@ -236,7 +245,8 @@ class ProductCategory(orm.Model):
 
         # Brand:
         return self.get_create_metel_group(cr, uid, 
-            brand_code, brand_name, producer_id, context=context)
+            brand_code, brand_name, producer_id, metel_mode='brand', 
+            context=context)
         
     _columns = {
         'metel_code': fields.char('Metel code', size=18, 
@@ -264,6 +274,8 @@ class ProductCategory(orm.Model):
             ('statistic', 'Statistic category'), # Level 4: 
             
             ('serie', 'Serie'), # Level 5:
+
+            ('electrocod', 'Electrocod'), # Electrocod
             ], 'Metel Mode'),
         }
 

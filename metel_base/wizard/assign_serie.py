@@ -51,11 +51,18 @@ class MetelAssignSerieWizard(orm.TransientModel):
     # --------------------
     def action_done(self, cr, uid, ids, context=None):
         ''' Event for button done
-        '''
+        '''        
         if context is None: 
-            context = {}        
+            context = {}    
+        active_ids = context.get('active_ids', [])
+        if not active_ids:
+            raise osv.except_osv(
+                _('No selection'), 
+                _('No selected statistic group selected!'),
+                )    
         
         wiz_browse = self.browse(cr, uid, ids, context=context)[0]
+        serie_id = wiz_browse.serie_id.id
         
         return {
             'type': 'ir.actions.act_window_close'
@@ -70,5 +77,3 @@ class MetelAssignSerieWizard(orm.TransientModel):
         }    
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
-
