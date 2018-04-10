@@ -19,8 +19,6 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
 ###############################################################################
-
-
 import os
 import sys
 import logging
@@ -46,34 +44,104 @@ class MetelAssignSerieWizard(orm.TransientModel):
     ''' 
     _name = 'metel.assign.serie.wizard'
 
-    # --------------------
+    # -------------------------------------------------------------------------        
     # Wizard button event:
-    # --------------------
+    # -------------------------------------------------------------------------        
     def action_done(self, cr, uid, ids, context=None):
         ''' Event for button done
         '''        
+        category_pool = self.pool.get('product.category')
+        product_pool = self.pool.get('product.product')
+
         if context is None: 
             context = {}    
         active_ids = context.get('active_ids', [])
-        if not active_ids:
-            raise osv.except_osv(
-                _('No selection'), 
-                _('No selected statistic group selected!'),
-                )    
         
         wiz_browse = self.browse(cr, uid, ids, context=context)[0]
         serie_id = wiz_browse.serie_id.id
         
-        return {
-            'type': 'ir.actions.act_window_close'
-            }
+        # Update statistic category:
+        category_pool.write(cr, uid, active_ids, {
+            'serie_id': serie_id,
+            }, context=context)
+        
+        # Update product with that statistic category:
+        product_ids = product_pool.search(cr, uid, [
+            ('metel_statistic_id', 'in', active_ids),
+            ], context=context)
+        return product_pool.write(cr, uid, product_ids, {
+            'serie_id': serie_id,
+            }, context=context)
+            
+            
+    # -------------------------------------------------------------------------        
+    # Default functions:
+    # -------------------------------------------------------------------------        
+    def _get_default_total(self, cr, uid, context=None):
+        ''' Check correct parameters in selected items
+        '''
+        brand_id = False        
 
+        category_pool = self.pool.get('product.category')
+        if context is None: 
+            context = {}
+        active_ids = context.get('active_ids', [])
+        
+        if active_ids:
+            return len(active_ids)
+        else:            
+            _logger.warning(
+                _('No selected statistic group selected!'))
+            return 0
+            
+
+    def _get_default_brand_id(self, cr, uid, context=None):
+        ''' Check correct parameters in selected items
+        '''
+        brand_id = False        
+
+        category_pool = self.pool.get('product.category')
+        if context is None: 
+            context = {}
+        active_ids = context.get('active_ids', [])
+        
+        if not active_ids:
+            _logger.warning(
+                _('No selected statistic group selected!'))
+            return False
+        
+        # Loop on all statistic category:
+        for category in category_pool.browse(
+                cr, uid, active_ids, context=context):
+            if category.metel_mode != 'statistic':
+                raise osv.except_osv(
+                    _('Wrong selection'), 
+                    _('Selection is not all statistic category!'),
+                    )
+                
+            if brand_id == False:
+                brand_id = category.parent_id
+                continue
+
+            if category.parent_id != brand_id:
+                raise osv.except_osv(
+                    _('Wrong selection'), 
+                    _('Selection is not in the same BRAND!'),
+                    )                    
+        return brand_id
+            
     _columns = {
         'serie_id': fields.many2one(
             'product.category', 'Serie', required=True),
+        'brand_id': fields.many2one('product.category', 'Brand'),    
+        'total': fields.integer('Total'),
         }
         
     _defaults = {
+        'brand_id': lambda s, cr, uid, c: s._get_default_brand_id(
+            cr, uid, context=c),
+        'total': lambda s, cr, uid, c: s._get_default_total(
+            cr, uid, context=c),
         }    
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -96,8 +96,8 @@ class MetelBase(orm.Model):
         file_mode = [
             'LSP', # 1. Public pricelist
             'FST', # 2. Statistic family
+            'FSC', # 3. Discount family
             #'LSG', #Reseller pricelist
-            #'FSC', #Discount family
             #'RIC', #Recode
             #'BAR', #Barcode
             ]
@@ -114,7 +114,7 @@ class MetelBase(orm.Model):
         for root, dirs, files in os.walk(data_folder):
             for filename in files:
                 logger = [] # List of error (reset every file)
-                
+                                
                 # Parse filename:
                 file_producer_code = filename[:3]
                 file_mode_code = filename[3:6]
@@ -124,6 +124,13 @@ class MetelBase(orm.Model):
                     cr, uid, file_producer_code, file_producer_code,
                     context=context)
                 fullname = os.path.join(root, filename)                
+
+                # Jump temp and hidden file:
+                if filename.endswith('~') or filename.startswith('.'):
+                    if verbose:
+                        _logger.info('Jump TEMP/HIDDEN file: %s' % fullname)
+                    continue
+                    
                 if file_mode_code not in file_mode:
                     if verbose:
                         _logger.info('Jump METEL file: %s (not in %s)' % (
@@ -314,13 +321,14 @@ class MetelBase(orm.Model):
                     #                    MODE: FST (Statistic family)
                     # ---------------------------------------------------------
                     elif file_mode_code in ('FST', 'FSC'):
-                        import pdb; pdb.set_trace()
                         if file_mode_code == 'FST':
                             field = 'metel_statistic'
                             field_id = 'metel_statistic_id'
+                            metel_mode = 'statistic'
                         else:
                             field = 'metel_discount'
                             field_id = 'metel_discount_id'
+                            metel_mode = 'discount'
                                 
                         # Data row:
                         producer_code = self.parse_text(line[0:3], logger)
@@ -351,6 +359,7 @@ class MetelBase(orm.Model):
                             'parent_id': metel_brand_id,
                             field: metel_code,
                             'name': name,
+                            'metel_mode': metel_mode,
                             }    
                         if category_ids:
                             metel_code_id = category_ids[0]    

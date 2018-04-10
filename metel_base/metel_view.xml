@@ -36,7 +36,7 @@
                     <field name="name" readonly="1"/>
                     <field name="metel_statistic" readonly="1" />
                     <field name="parent_id" readonly="1" string="Statistic category"/>
-                    <field name="metel_serie_id" context="{'default_parent_id': parent_id, 'default_is_serie': True}" domain="[('parent_id', '=', parent_id),('is_serie', '=', True)]" /><!--TODO CHANGE DOMAIN-->
+                    <field name="metel_serie_id" context="{'default_parent_id': parent_id, 'default_metel_mode': 'serie'}" domain="[('parent_id', '=', parent_id),('metel_mode', '=', 'serie')]" />
                     <field name="metel_mode" readonly="1" />
                 </tree>
             </field>
@@ -50,8 +50,15 @@
                     <field name="name" />
                     <field name="metel_statistic" />
                     <field name="metel_mode" />
-                    <field name="parent_id" domain="[('parent_id.parent_id.metel_code', '=', 'METEL')]" string="Brand"/><!--TODO CHANGE DOMAIN: BRAND-->
-                    <field name="metel_serie_id" />                    
+                    
+                    <!--TODO CHANGE DOMAIN: BRAND-->
+                    <field name="parent_id" domain="[('parent_id.metel_code', '=', 'METEL')]" string="Producer"/>
+                    <field name="parent_id" domain="[('parent_id.parent_id.metel_code', '=', 'METEL')]" string="Brand"/>
+                    <field name="parent_id" domain="[('metel_mode', '=', 'statistic'),('parent_id.parent_id.parent_id.metel_code', '=', 'METEL')]" string="Statistic category"/>
+                    <field name="parent_id" domain="[('metel_mode', '=', 'discount'),('parent_id.parent_id.parent_id.metel_code', '=', 'METEL')]" string="Discount family"/>
+                    
+                    <field name="metel_serie_id" />   
+                                     
                     <!--<field name="partner_id" filter_domain="[('partner_id','=',self)]"/>-->
                     <filter name="metel_serie_id_no" string="With serie" domain="[('metel_serie_id','!=',False)]"/>
                     <filter name="metel_serie_id_yes" string="Without serie" domain="[('metel_serie_id','=',False)]"/>                    
@@ -255,7 +262,7 @@
             <field name="view_id" ref="view_product_category_statistic_tree"/>
             <field name="search_view_id" ref="view_product_category_statistic_search"/>
             <field name="context">{}</field>
-            <field name="domain">[('metel_mode', '=', 'producer')]</field>
+            <field name="domain">[('metel_mode', '=', 'brand')]</field>
         </record>
         <record model="ir.actions.act_window" id="action_metel_group_metel_statistic">
             <field name="name">Metel group statistic category</field>
