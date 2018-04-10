@@ -154,7 +154,7 @@ class ProductCategory(orm.Model):
                 if not parent_id:
                     _logger.error('Parent not found: %s' % code_parent)
                     continue
-                    
+
                 group_ids = self.search(cr, uid, [
                     ('parent_id', '=', parent_id),
                     ('electrocod_code', '=', code),

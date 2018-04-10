@@ -36,7 +36,8 @@
                     <field name="name" readonly="1"/>
                     <field name="metel_statistic" readonly="1" />
                     <field name="parent_id" readonly="1" string="Statistic category"/>
-                    <field name="metel_serie_id" context="{'default_parent_id': parent_id, 'default_is_serie': True}" domain="[('parent_id', '=', parent_id),('is_serie', '=', True)]" />
+                    <field name="metel_serie_id" context="{'default_parent_id': parent_id, 'default_is_serie': True}" domain="[('parent_id', '=', parent_id),('is_serie', '=', True)]" /><!--TODO CHANGE DOMAIN-->
+                    <field name="metel_mode" readonly="1" />
                 </tree>
             </field>
         </record>
@@ -48,13 +49,15 @@
                 <search string="Metel statistic group" version="7.0">        
                     <field name="name" />
                     <field name="metel_statistic" />
-                    <field name="parent_id" domain="[('parent_id.parent_id.metel_code', '=', 'METEL')]" string="Brand"/><!--BRAND-->
+                    <field name="metel_mode" />
+                    <field name="parent_id" domain="[('parent_id.parent_id.metel_code', '=', 'METEL')]" string="Brand"/><!--TODO CHANGE DOMAIN: BRAND-->
                     <field name="metel_serie_id" />                    
                     <!--<field name="partner_id" filter_domain="[('partner_id','=',self)]"/>-->
                     <filter name="metel_serie_id_no" string="With serie" domain="[('metel_serie_id','!=',False)]"/>
                     <filter name="metel_serie_id_yes" string="Without serie" domain="[('metel_serie_id','=',False)]"/>                    
                     <group expand="0" string="Group By...">
                         <filter name="group_parent" string="Parent" context="{'group_by': 'parent_id'}"/>
+                        <filter name="group_mode" string="Mode" context="{'group_by': 'metel_mode'}"/>
                         <filter name="group_serie" string="Serie" context="{'group_by': 'metel_serie_id'}"/>
                     </group>                
                 </search>
@@ -68,7 +71,7 @@
             <field name="view_id" ref="view_product_category_statistic_tree"/>
             <field name="search_view_id" ref="view_product_category_statistic_search"/>
             <field name="context">{}</field>
-            <field name="domain">[('parent_id.parent_id.parent_id.metel_code', '=', 'METEL'),('metel_statistic', '!=', False)]</field>
+            <field name="domain">[('parent_id.parent_id.parent_id.metel_code', '=', 'METEL'),('metel_statistic', '!=', False)]</field> <!--TODO CHANGE-->
         </record>
                               <!--DISCOUNT FAMILY:-->
         <!--product.category-->
@@ -81,6 +84,7 @@
                     <field name="is_serie" invisible="1" />        
                     <field name="name" readonly="1"/>
                     <field name="metel_discount" readonly="1" />
+                    <field name="metel_mode" readonly="1" />
                     <field name="parent_id" readonly="1" string="Brand"/>
                 </tree>
             </field>
@@ -93,7 +97,8 @@
                 <search string="Metel discount group" version="7.0">        
                     <field name="name" />
                     <field name="metel_discount" />
-                    <field name="parent_id" domain="[('parent_id.parent_id.metel_code', '=', 'METEL')]" string="Brand"/><!--BRAND-->
+                    <field name="metel_mode" readonly="1" />
+                    <field name="parent_id" domain="[('parent_id.parent_id.metel_code', '=', 'METEL')]" string="Brand"/><!--TODO CHANGE DOMAIN: BRAND-->
                     <group expand="0" string="Group By...">
                         <filter name="group_parent" string="Parent" context="{'group_by': 'parent_id'}"/>
                     </group>                
@@ -229,30 +234,146 @@
             <field name="context">{}</field>
             <field name="domain">[]</field>
         </record>
+
+        <!--METEL group:-->
+        <record model="ir.actions.act_window" id="action_metel_group_metel_producer">
+            <field name="name">Metel group producer</field>
+            <field name="res_model">product.category</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_product_category_statistic_tree"/>
+            <field name="search_view_id" ref="view_product_category_statistic_search"/>
+            <field name="context">{}</field>
+            <field name="domain">[('metel_mode', '=', 'producer')]</field>
+        </record>
+        <!--<field name="domain">[('parent_id.parent_id.parent_id.metel_code', '=', 'METEL'),('metel_statistic', '!=', False)]</field>-->
+        <record model="ir.actions.act_window" id="action_metel_group_metel_brand">
+            <field name="name">Metel group brand</field>
+            <field name="res_model">product.category</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_product_category_statistic_tree"/>
+            <field name="search_view_id" ref="view_product_category_statistic_search"/>
+            <field name="context">{}</field>
+            <field name="domain">[('metel_mode', '=', 'producer')]</field>
+        </record>
+        <record model="ir.actions.act_window" id="action_metel_group_metel_statistic">
+            <field name="name">Metel group statistic category</field>
+            <field name="res_model">product.category</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_product_category_statistic_tree"/>
+            <field name="search_view_id" ref="view_product_category_statistic_search"/>
+            <field name="context">{}</field>
+            <field name="domain">[('metel_mode', '=', 'statistic')]</field>
+        </record>
+        <record model="ir.actions.act_window" id="action_metel_group_metel_discount">
+            <field name="name">Metel group discount category</field>
+            <field name="res_model">product.category</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_product_category_statistic_tree"/>
+            <field name="search_view_id" ref="view_product_category_statistic_search"/>
+            <field name="context">{}</field>
+            <field name="domain">[('metel_mode', '=', 'discount')]</field>
+        </record>
+        <record model="ir.actions.act_window" id="action_metel_group_metel_serie">
+            <field name="name">Metel group serie</field>
+            <field name="res_model">product.category</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_product_category_statistic_tree"/>
+            <field name="search_view_id" ref="view_product_category_statistic_search"/>
+            <field name="context">{}</field>
+            <field name="domain">[('metel_mode', '=', 'serie')]</field>
+        </record>
+        <record model="ir.actions.act_window" id="action_metel_group_metel_electrocod">
+            <field name="name">Metel group electrocod</field>
+            <field name="res_model">product.category</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_product_category_statistic_tree"/>
+            <field name="search_view_id" ref="view_product_category_statistic_search"/>
+            <field name="context">{}</field>
+            <field name="domain">[('metel_mode', '=', 'electrocod')]</field>
+        </record>
+        
         <menuitem 
-            parent="base.menu_custom" 
+            parent="stock.menu_stock_root" 
             id="menu_action_metel_root" 
             name="METEL"
             sequence="40"
-            />
+            /><!--base.menu_custom-->
+
+            
             <menuitem 
                 parent="menu_action_metel_root" 
-                id="menu_action_metel_parameter" 
-                action="action_metel_parameter_tree"
-                sequence="10"
-                />
-            <menuitem 
-                parent="menu_action_metel_root" 
-                id="menu_action_product_category_statistic_form" 
-                action="action_product_category_statistic_form"
+                id="menu_action_metel_root_group" 
+                name="Group"
                 sequence="20"
                 />
+                <menuitem 
+                    parent="menu_action_metel_root_group" 
+                    id="menu_action_metel_group_metel_producer" 
+                    action="action_metel_group_metel_producer"
+                    sequence="10"
+                    />
+                <menuitem 
+                    parent="menu_action_metel_root_group"
+                    id="menu_action_metel_group_metel_brand" 
+                    action="action_metel_group_metel_brand"
+                    sequence="20"
+                    />
+                <menuitem 
+                    parent="menu_action_metel_root_group"
+                    id="menu_action_metel_group_metel_statistic" 
+                    action="action_metel_group_metel_statistic"
+                    sequence="30"
+                    />
+                <menuitem 
+                    parent="menu_action_metel_root_group"
+                    id="menu_action_metel_group_metel_discount" 
+                    action="action_metel_group_metel_discount"
+                    sequence="40"
+                    />
+                <menuitem 
+                    parent="menu_action_metel_root_group"
+                    id="menu_action_metel_group_metel_serie" 
+                    action="action_metel_group_metel_serie"
+                    sequence="50"
+                    />
+                <menuitem 
+                    parent="menu_action_metel_root_group"
+                    id="menu_action_metel_group_metel_electrocod" 
+                    action="action_metel_group_metel_electrocod"
+                    sequence="60"
+                    />
+
             <menuitem 
                 parent="menu_action_metel_root" 
-                id="menu_action_product_category_discount_form" 
-                action="action_product_category_discount_form"
-                sequence="30"
+                id="menu_action_metel_root_config" 
+                name="Configuration"
+                sequence="90"
                 />
+            
+                <menuitem 
+                    parent="menu_action_metel_root_config" 
+                    id="menu_action_metel_parameter" 
+                    action="action_metel_parameter_tree"
+                    sequence="10"
+                    />
+                <menuitem 
+                    parent="menu_action_metel_root_config" 
+                    id="menu_action_product_category_statistic_form" 
+                    action="action_product_category_statistic_form"
+                    sequence="20"
+                    />
+                <menuitem 
+                    parent="menu_action_metel_root_config" 
+                    id="menu_action_product_category_discount_form" 
+                    action="action_product_category_discount_form"
+                    sequence="30"
+                    />
 
     </data>
 </openerp>
