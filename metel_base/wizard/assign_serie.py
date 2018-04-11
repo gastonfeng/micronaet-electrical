@@ -62,7 +62,7 @@ class MetelAssignSerieWizard(orm.TransientModel):
         
         # Update statistic category:
         category_pool.write(cr, uid, active_ids, {
-            'serie_id': serie_id,
+            'metel_serie_id': serie_id,
             }, context=context)
         
         # Update product with that statistic category:
@@ -70,7 +70,7 @@ class MetelAssignSerieWizard(orm.TransientModel):
             ('metel_statistic_id', 'in', active_ids),
             ], context=context)
         return product_pool.write(cr, uid, product_ids, {
-            'serie_id': serie_id,
+            'metel_serie_id': serie_id,
             }, context=context)
             
             
@@ -92,8 +92,7 @@ class MetelAssignSerieWizard(orm.TransientModel):
         else:            
             _logger.warning(
                 _('No selected statistic group selected!'))
-            return 0
-            
+            return 0            
 
     def _get_default_brand_id(self, cr, uid, context=None):
         ''' Check correct parameters in selected items
