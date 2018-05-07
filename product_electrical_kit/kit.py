@@ -46,18 +46,19 @@ class ProductProductKit(orm.Model):
     _rec_name = 'product_id'
     _order = 'product_id'
     
-    #def change_categ_id(self, cr, uid, ids, categ_id, context=None):
-    #    ''' Force product domain filter in present
-    #    '''
-    #    res = {}
-    #    if not categ_id:
-    #        return res
-    #    res['domain'] = {}
-    #    res['domain']['component_id'] = [
-    #        ('product_id', '!=', ids[0]), # TODO
-    #        ('metel_brand_id', '=', categ_id),
-    #        ]        
-    #    return res
+    def onchange_categ_id(self, cr, uid, ids, categ_id, context=None):
+        ''' Force product domain filter in present
+        '''
+        res = {}
+        res['domain'] = {
+            'component_id': []
+            }
+        if categ_id:        
+            res['domain']['component_id'].extend([
+                #('product_id', '!=', ids[0]), # TODO
+                ('metel_serie_id', '=', categ_id),
+                ])
+        return res
         
     _columns = {
         'product_id': fields.many2one('product.product', 'Product'),
@@ -84,13 +85,22 @@ class ProductProduct(orm.Model):
         '''
         # Pool used:
         excel_pool = self.pool.get('excel.writer')
-        
+
         # ---------------------------------------------------------------------
         # Collect data:
         # ---------------------------------------------------------------------
         current_proxy = self.browse(cr, uid, ids, context=context)[0]
         brand_db = {} # NOTE: False >> common part
         title = []        
+        col_width = [
+            5, # qty
+            13, # code
+            35, # name
+            8, # price
+            1 # space
+            ]
+        col_common = len(col_width)
+            
         for line in current_proxy.component_ids: 
             brand = line.categ_id.name or False
             if brand in brand_db:
@@ -98,13 +108,7 @@ class ProductProduct(orm.Model):
             else:    
                 brand_db[brand] = [line]
                 if brand: # False >> Common
-                    title.extend([
-                        5, # qty
-                        13, # code
-                        35, # name
-                        8, # price
-                        1 # space
-                        ])
+                    title.extend(col_width)
 
         # ---------------------------------------------------------------------
         #                            Generate XLS file:
@@ -148,7 +152,7 @@ class ProductProduct(orm.Model):
         excel_pool.write_xls_line(ws_name, row, title_name)
         
         # ---------------------------------------------------------------------
-        # Write header
+        # Write common block (no brand)
         # ---------------------------------------------------------------------
         # 1. Write common line:
         for line in brand_db.get(False, []):
@@ -163,28 +167,28 @@ class ProductProduct(orm.Model):
                     '',
                     ])
             excel_pool.write_xls_line(ws_name, row, data)
-            
         start = row # For next brand block
-            
 
         # TODO 2. Write brand line:
-        for line in brand_db:
-            if not line:
-                continue # jump common
-                
-            #for t in sorted(brand_db, key=lambda x: x.name):
-            #    
-            #row += 1
-            #data = []
-            #for i in range(0, len(brand_db) - 1):
-            #    data.extend([
-            #        line.qty,
-            #        line.component_id.default_code,
-            #        line.component_id.name,
-            #        line.component_id.lst_price,
-            #        '',
-            #        ])
-            #excel_pool.write_xls_line(ws_name, row, data, col=0)
+        col = 0
+        for brand in sorted(brand_db):
+            if not brand:
+                continue # jump common block
+                            
+            row = start
+            for line in sorted(
+                    brand_db[brand], 
+                    key=lambda x: x.product_id.default_code):
+                row += 1
+                data = [
+                    line.qty,
+                    line.component_id.default_code,
+                    line.component_id.name,
+                    line.component_id.lst_price,
+                    '',
+                    ]
+                excel_pool.write_xls_line(ws_name, row, data, col=col)
+            col += col_common # Start position
             
         return excel_pool.return_attachment(
             cr, uid, name='KIT Check', name_of_file='kit_check.xlsx') 
