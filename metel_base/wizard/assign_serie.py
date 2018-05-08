@@ -69,6 +69,7 @@ class MetelAssignSerieWizard(orm.TransientModel):
         product_ids = product_pool.search(cr, uid, [
             ('metel_statistic_id', 'in', active_ids),
             ], context=context)
+        _logger.info('Update also %s product' % len(product_ids))    
         return product_pool.write(cr, uid, product_ids, {
             'metel_serie_id': serie_id,
             }, context=context)
