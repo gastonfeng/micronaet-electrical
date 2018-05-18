@@ -72,7 +72,7 @@ class ProductProductKit(orm.Model):
     
     _defaults = {
         'qty': lambda *x: 1,
-        }    
+        }
 
 class ProductProduct(orm.Model):
     """ Model name: ProductProduct
@@ -80,6 +80,18 @@ class ProductProduct(orm.Model):
     
     _inherit = 'product.product'
     
+    def get_kit_price_serie(self, cr, uid, product_id, serie_id, context=None):
+        ''' Get product price from serie passed:
+        '''
+        res = 0.0
+        component_ids = self.browse(
+            cr, uid, product_id, context=context).component_ids
+        for cmpt in component_ids:
+            cmpt_serie_id = cmpt.metel_serie_id.id
+            if not cmpt_serie_id or cmpt_serie_id != serie_id:
+                res += cmpt.qty * cmpt.lst_price # TODO use pricelist
+        return res
+        
     def extract_check_report_xlsx(self, cr, uid, ids, context=None):
         ''' Report for check kit definition
         '''
