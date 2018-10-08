@@ -349,7 +349,7 @@ class MetelBase(orm.Model):
                                     brand_code, context=context)
                         
                         # -----------------------------------------------------
-                        # Crete or get statistic category:            
+                        # Crete or get statistic/discount category:            
                         # -----------------------------------------------------
                         category_ids = category_pool.search(cr, uid, [
                             ('parent_id', '=', metel_brand_id),
@@ -370,7 +370,7 @@ class MetelBase(orm.Model):
                                 cr, uid, data, context=context)
                                 
                         # -----------------------------------------------------
-                        # Update product:
+                        # Update product of this category with serie:
                         # -----------------------------------------------------
                         product_ids = product_pool.search(cr, uid, [
                             ('metel_producer_code', '=', producer_code),
