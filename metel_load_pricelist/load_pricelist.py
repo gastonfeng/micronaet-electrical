@@ -376,6 +376,7 @@ class MetelBase(orm.Model):
                             ('metel_producer_code', '=', producer_code),
                             ('metel_brand_code', '=', brand_code),                            
                             (field, '=', metel_code),
+                            (field_id, '!=', metel_code_id),
                             ], context=context)
                             
                         data = {field_id: metel_code_id, }
