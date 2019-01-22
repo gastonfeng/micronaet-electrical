@@ -208,8 +208,8 @@
 
                     <filter name="product_metel" string="METEL" domain="[('is_metel','=',True)]"/>
                     <filter name="product_metel_kit" string="METEL KIT" domain="[('metel_kit','=',True)]"/>
-                </xpath>    
-                <xpath expr="//group[@string='Group by...']" position="inside">
+                </xpath>
+                <xpath expr="//group[@name='Group by...']" position="inside">
                     <filter string='METEL Producer' name="group_metel_producer" domain="[]" context="{'group_by': 'metel_producer_id'}"/>
                     <filter string='METEL Brand' name="group_metel_brand" domain="[]" context="{'group_by': 'metel_brand_id'}"/>
                     <filter string='METEL Serie' name="group_metel_serie" domain="[]" context="{'group_by': 'metel_serie_id'}"/>
