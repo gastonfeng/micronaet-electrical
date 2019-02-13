@@ -56,13 +56,13 @@ class SaleOrder(models.Model):
         )
     create_ddt = fields.Boolean('Automatically create the DDT')
 
-    def onchange_partner_id(self, cr, uid, ids, partner_id, context=None):
+    def onchange_partner_id(self,  ids, partner_id, context=None):
         if not context:
             context = {}
         result = super(SaleOrder, self).onchange_partner_id(
-            cr, uid, ids, partner_id, context=context)
+             ids, partner_id, context=context)
         if partner_id:
-            partner = self.pool.get('res.partner').browse(cr, uid, partner_id)
+            partner = self.pool.get('res.partner').browse( partner_id)
             result['value'][
                 'carriage_condition_id'] = partner.carriage_condition_id.id
             result['value'][
@@ -75,10 +75,10 @@ class SaleOrder(models.Model):
                 ] = partner.transportation_method_id.id
         return result
 
-    def _make_invoice(self, cr, uid, order, lines, context={}):
+    def _make_invoice(self,  order, lines, context={}):
         inv_id = super(SaleOrder, self)._make_invoice(
-            cr, uid, order, lines, context)
-        self.pool.get('account.invoice').write(cr, uid, [inv_id], {
+             order, lines, context)
+        self.pool.get('account.invoice').write( [inv_id], {
             'carriage_condition_id': order.carriage_condition_id.id,
             'goods_description_id': order.goods_description_id.id,
             'transportation_reason_id': order.transportation_reason_id.id,
@@ -90,36 +90,36 @@ class SaleOrder(models.Model):
         return inv_id
 
     def action_ship_create(
-        self, cr, uid, ids, context=None
+        self,  ids, context=None
     ):
         res = super(SaleOrder, self).action_ship_create(
-            cr, uid, ids, context=context)
-        for order in self.browse(cr, uid, ids, context):
+             ids, context=context)
+        for order in self.browse( ids, context):
             if order.create_ddt:
                 ddt_data = {
                     'partner_id': order.partner_id.id,
                     }
                 ddt_pool = self.pool['stock.ddt']
-                ddt_id = ddt_pool.create(cr, uid, ddt_data, context=context)
+                ddt_id = ddt_pool.create( ddt_data, context=context)
                 for picking in order.picking_ids:
                     self.pool.get('stock.picking').write(
-                        cr, uid, [picking.id], {'ddt_id': ddt_id})
+                         [picking.id], {'ddt_id': ddt_id})
                     picking.ddt_id = ddt_id
                 workflow.trg_validate(
                     uid, 'stock.ddt', ddt_id, 'ddt_confirm', cr)
         return res
 
-    def action_view_ddt(self, cr, uid, ids, context=None):
+    def action_view_ddt(self,  ids, context=None):
         mod_obj = self.pool.get('ir.model.data')
         act_obj = self.pool.get('ir.actions.act_window')
 
         result = mod_obj.get_object_reference(
-            cr, uid, 'electrical_l10n_it_ddt', 'action_stock_ddt')
+             'electrical_l10n_it_ddt', 'action_stock_ddt')
         id = result and result[1] or False
-        result = act_obj.read(cr, uid, [id], context=context)[0]
+        result = act_obj.read( [id], context=context)[0]
 
         ddt_ids = []
-        for so in self.browse(cr, uid, ids, context=context):
+        for so in self.browse( ids, context=context):
             ddt_ids += [ddt.id for ddt in so.ddt_ids]
 
         if len(ddt_ids) > 1:
@@ -127,7 +127,7 @@ class SaleOrder(models.Model):
                 map(str, ddt_ids)) + "])]"
         else:
             res = mod_obj.get_object_reference(
-                cr, uid, 'electrical_l10n_it_ddt', 'stock_ddt_form')
+                 'electrical_l10n_it_ddt', 'stock_ddt_form')
             result['views'] = [(res and res[1] or False, 'form')]
             result['res_id'] = ddt_ids and ddt_ids[0] or False
         return result

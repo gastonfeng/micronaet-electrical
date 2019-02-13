@@ -48,29 +48,29 @@ class ProductCategory(orm.Model):
     # -------------------------------------------------------------------------
     # Utility:
     # -------------------------------------------------------------------------
-    def get_electrocod_category(self, cr, uid, code='ELECTROCOD', 
+    def get_electrocod_category(self,  code='ELECTROCOD', 
             name=False, parent_id=False, context=None):
         ''' Create and return missed product category:
         '''
-        group_ids = self.search(cr, uid, [
+        group_ids = self.search( [
             #('parent_id', '=', parent_id), # for search without parent_id
             ('electrocod_code', '=', code),
             ], context=context)
         if group_ids:    
             # Update:
-            self.write(cr, uid, group_ids, {
+            self.write( group_ids, {
                 'metel_mode': 'electrocod',
                 }, context=context)
             return group_ids[0]        
         else:
-            return self.create(cr, uid, {
+            return self.create( {
                 'parent_id': parent_id,
                 'electrocod_code': code,
                 'name': name or code or '?',
                 'metel_mode': 'electrocod',
                 }, context=context)
         
-    def scheduled_electrocod_import_data(self, cr, uid, filename=False, 
+    def scheduled_electrocod_import_data(self,  filename=False, 
             root_name='ELECTROCOD', ec_check=37, context=None):
         ''' Import all electrocod group structure 
             filename: fullname of electrocod csv file            
@@ -85,11 +85,11 @@ class ProductCategory(orm.Model):
         # ---------------------------------------------------------------------
         # Root category: ELECTROCOD
         root_id = self.get_electrocod_category(
-            cr, uid, code=root_name, context=context)
+             code=root_name, context=context)
 
         # Missed category: NOTFOUND (create but not used here)    
         missed_id = self.get_electrocod_category(
-            cr, uid, code='NOTFOUND', parent_id=root_id, context=context)
+             code='NOTFOUND', parent_id=root_id, context=context)
 
         # ---------------------------------------------------------------------
         # Read all file and save in database:
@@ -155,7 +155,7 @@ class ProductCategory(orm.Model):
                     _logger.error('Parent not found: %s' % code_parent)
                     continue
 
-                group_ids = self.search(cr, uid, [
+                group_ids = self.search( [
                     ('parent_id', '=', parent_id),
                     ('electrocod_code', '=', code),
                     ], context=context)
@@ -166,11 +166,11 @@ class ProductCategory(orm.Model):
                     'metel_mode': 'electrocod',
                     }
                 if group_ids:
-                    self.write(cr, uid, group_ids[0], data, context=context)
+                    self.write( group_ids[0], data, context=context)
                     nodes[code_node] = group_ids[0]      
                     _logger.info('Node update: [%s] %s' % (code, name))    
                 else:
-                    nodes[code_node] = self.create(cr, uid, data, 
+                    nodes[code_node] = self.create( data, 
                         context=context)
                     _logger.info('Node create: [%s] %s' % (code, name))    
         _logger.info('Electrocod import end!')

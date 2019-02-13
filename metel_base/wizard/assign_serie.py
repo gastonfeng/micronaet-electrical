@@ -47,7 +47,7 @@ class MetelAssignSerieWizard(orm.TransientModel):
     # -------------------------------------------------------------------------        
     # Wizard button event:
     # -------------------------------------------------------------------------        
-    def action_done(self, cr, uid, ids, context=None):
+    def action_done(self,  ids, context=None):
         ''' Event for button done
         '''        
         category_pool = self.pool.get('product.category')
@@ -57,20 +57,20 @@ class MetelAssignSerieWizard(orm.TransientModel):
             context = {}    
         active_ids = context.get('active_ids', [])
         
-        wiz_browse = self.browse(cr, uid, ids, context=context)[0]
+        wiz_browse = self.browse( ids, context=context)[0]
         serie_id = wiz_browse.serie_id.id
         
         # Update statistic category:
-        category_pool.write(cr, uid, active_ids, {
+        category_pool.write( active_ids, {
             'metel_serie_id': serie_id,
             }, context=context)
         
         # Update product with that statistic category:
-        product_ids = product_pool.search(cr, uid, [
+        product_ids = product_pool.search( [
             ('metel_statistic_id', 'in', active_ids),
             ], context=context)
         _logger.info('Update also %s product' % len(product_ids))    
-        return product_pool.write(cr, uid, product_ids, {
+        return product_pool.write( product_ids, {
             'metel_serie_id': serie_id,
             }, context=context)
             
@@ -78,7 +78,7 @@ class MetelAssignSerieWizard(orm.TransientModel):
     # -------------------------------------------------------------------------        
     # Default functions:
     # -------------------------------------------------------------------------        
-    def _get_default_total(self, cr, uid, context=None):
+    def _get_default_total(self,  context=None):
         ''' Check correct parameters in selected items
         '''
         brand_id = False        
@@ -95,7 +95,7 @@ class MetelAssignSerieWizard(orm.TransientModel):
                 _('No selected statistic group selected!'))
             return 0            
 
-    def _get_default_brand_id(self, cr, uid, context=None):
+    def _get_default_brand_id(self,  context=None):
         ''' Check correct parameters in selected items
         '''
         brand_id = False        
@@ -112,7 +112,7 @@ class MetelAssignSerieWizard(orm.TransientModel):
         
         # Loop on all statistic category:
         for category in category_pool.browse(
-                cr, uid, active_ids, context=context):
+                 active_ids, context=context):
             if category.metel_mode != 'statistic':
                 raise osv.except_osv(
                     _('Wrong selection'), 
@@ -138,10 +138,10 @@ class MetelAssignSerieWizard(orm.TransientModel):
         }
         
     _defaults = {
-        'brand_id': lambda s, cr, uid, c: s._get_default_brand_id(
-            cr, uid, context=c),
-        'total': lambda s, cr, uid, c: s._get_default_total(
-            cr, uid, context=c),
+        'brand_id': lambda s,  c: s._get_default_brand_id(
+             context=c),
+        'total': lambda s,  c: s._get_default_total(
+             context=c),
         }    
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
