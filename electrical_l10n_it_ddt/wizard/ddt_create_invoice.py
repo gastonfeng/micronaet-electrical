@@ -21,8 +21,8 @@
 
 
 from openerp import models, api, fields
-from openerp.tools.translate import _
 from openerp.exceptions import Warning
+from openerp.tools.translate import _
 
 
 class DdTCreateInvoice(models.TransientModel):

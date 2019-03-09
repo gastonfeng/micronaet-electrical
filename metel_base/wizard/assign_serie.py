@@ -30,11 +30,6 @@ from dateutil.relativedelta import relativedelta
 from openerp import SUPERUSER_ID
 from openerp import tools
 from openerp.tools.translate import _
-from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT, 
-    DEFAULT_SERVER_DATETIME_FORMAT, 
-    DATETIME_FORMATS_MAP, 
-    float_compare)
-
 
 _logger = logging.getLogger(__name__)
 

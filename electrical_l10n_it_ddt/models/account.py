@@ -28,19 +28,12 @@ class account_invoice(orm.Model):
 
     _inherit = 'account.invoice'
 
-    _columns = {
-        'carriage_condition_id': fields.many2one(
-            'stock.picking.carriage_condition', 'Carriage Condition'),
-        'goods_description_id': fields.many2one(
-            'stock.picking.goods_description', 'Description of Goods'),
-        'transportation_reason_id': fields.many2one(
-            'stock.picking.transportation_reason',
-            'Reason for Transportation'),
-        'transportation_method_id': fields.many2one(
-            'stock.picking.transportation_method',
-            'Method of Transportation'),
-        'parcels': fields.integer('Number of Packages'),
-    }
+    carriage_condition_id = fields.Many2one('stock.picking.carriage_condition', 'Carriage Condition')
+    goods_description_id = fields.Many2one('stock.picking.goods_description', 'Description of Goods')
+    transportation_reason_id = fields.Many2one('stock.picking.transportation_reason', 'Reason for Transportation')
+    transportation_method_id = fields.Many2one('stock.picking.transportation_method', 'Method of Transportation')
+    parcels = fields.Integer('Number of Packages')
+
 
     def onchange_partner_id(
             self, cr, uid, ids, type, partner_id, date_invoice=False,

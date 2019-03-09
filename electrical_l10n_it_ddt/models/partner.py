@@ -20,8 +20,8 @@
 ##############################################################################
 
 
-from openerp.osv import orm
 from openerp.osv import fields
+from openerp.osv import orm
 
 
 class res_partner(orm.Model):

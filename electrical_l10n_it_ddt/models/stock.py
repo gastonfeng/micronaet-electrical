@@ -21,17 +21,14 @@
 ##############################################################################
 
 import logging
+from datetime import datetime
+
+from openerp import _
+from openerp import api
 from openerp import fields
 from openerp import models
-from openerp import api
-from openerp import _
-from openerp.exceptions import Warning
 from openerp.osv import osv
-from datetime import datetime, timedelta
-from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT, 
-    DEFAULT_SERVER_DATETIME_FORMAT, 
-    DATETIME_FORMATS_MAP, 
-    float_compare)
+from openerp.tools import (DEFAULT_SERVER_DATETIME_FORMAT)
 
 _logger = logging.getLogger(__name__)
 

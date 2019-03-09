@@ -21,7 +21,3 @@
 ##############################################################################
 
 
-from . import account
-from . import partner
-from . import sale
-from . import stock
