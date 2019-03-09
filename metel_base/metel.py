@@ -117,18 +117,18 @@ class MetelMetel(orm.Model):
     # -------------------------------------------------------------------------
     # Load database for parsing:
     # -------------------------------------------------------------------------
-    def load_parse_text_currency(self, cr, uid, context=None):
+    def load_parse_text_currency(self,  context=None):
         ''' Parse text value for currency ID according with METEL code
         '''
         res = {}
         currency_pool = self.pool.get('res.currency')
-        currency_ids = currency_pool.search(cr, uid, [], context=context)
-        for currency in currency_pool.browse(cr, uid, currency_ids,
+        currency_ids = currency_pool.search( [], context=context)
+        for currency in currency_pool.browse( currency_ids,
                 context=context):
             res[currency.name] = currency.id
         return res
 
-    def load_parse_text_uom(self, cr, uid, context=None):
+    def load_parse_text_uom(self,  context=None):
         ''' Parse text value for uom ID according with METEL code
             Used:
             PCE Pezzi - BLI Blister - BRD Cartoni - KGM Chilogrammi
@@ -136,8 +136,8 @@ class MetelMetel(orm.Model):
         '''
         res = {}
         uom_pool = self.pool.get('product.uom')
-        uom_ids = uom_pool.search(cr, uid, [], context=context)
-        for uom in uom_pool.browse(cr, uid, uom_ids,
+        uom_ids = uom_pool.search( [], context=context)
+        for uom in uom_pool.browse( uom_ids,
                 context=context):
             if uom.metel_code:
                 res[uom.metel_code] = uom.id
@@ -183,11 +183,11 @@ class ProductCategory(orm.Model):
     # -------------------------------------------------------------------------
     # Utility:
     # -------------------------------------------------------------------------
-    def get_create_metel_group(self, cr, uid, code, name=False, 
+    def get_create_metel_group(self,  code, name=False,
             parent_id=False, metel_mode=False, context=None):
         ''' Get (or create if not present) producer "code" and "name"
         '''
-        group_ids = self.search(cr, uid, [
+        group_ids = self.search( [
             ('parent_id', '=', parent_id),
             ('metel_code', '=', code),
             ], context=context)
@@ -196,7 +196,7 @@ class ProductCategory(orm.Model):
                 _logger.error(_('Code present more than one! [%s]') % code)
 
             # Update metel mode: XXX (removeable)    
-            self.write(cr, uid, group_ids, {
+            self.write( group_ids, {
                 'metel_mode': metel_mode,
                 }, context=context)
             return group_ids[0]
@@ -208,35 +208,35 @@ class ProductCategory(orm.Model):
                 'metel_mode': metel_mode,
                 }
     
-            return self.create(cr, uid, data, context=context)
+            return self.create( data, context=context)
     
     # Producer group ID:
-    def get_create_producer_group(self, cr, uid, 
+    def get_create_producer_group(self,
             producer_code, producer_name=False, context=None):
         ''' Create producer group
         '''
         # Parent root:
-        metel_id = self.get_create_metel_group(cr, uid, 
+        metel_id = self.get_create_metel_group(
             'METEL', metel_mode='metel', context=context)
 
         # Producer:
-        return self.get_create_metel_group(cr, uid, 
+        return self.get_create_metel_group(
             producer_code, producer_name, metel_id, metel_mode='producer', 
             context=context)
 
     # Brand group ID:
-    def get_create_brand_group(self, cr, uid, 
+    def get_create_brand_group(self,
             producer_code, # must exist!
             brand_code, brand_name,
             context=None):
         ''' Get (or create if not present) producer "code" and "name"
         '''
         # Producer (parent):
-        producer_id = self.get_create_producer_group(cr, uid, 
+        producer_id = self.get_create_producer_group(
             producer_code, context=context)
 
         # Brand:
-        return self.get_create_metel_group(cr, uid, 
+        return self.get_create_metel_group(
             brand_code, brand_name, producer_id, metel_mode='brand', 
             context=context)
         

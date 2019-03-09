@@ -37,7 +37,7 @@ class ProductProductKit(orm.Model):
     _rec_name = 'product_id'
     _order = 'product_id'
     
-    def onchange_categ_id(self, cr, uid, ids, categ_id, context=None):
+    def onchange_categ_id(self,  ids, categ_id, context=None):
         ''' Force product domain filter in present
         '''
         res = {}
@@ -71,19 +71,19 @@ class ProductProduct(orm.Model):
     
     _inherit = 'product.product'
     
-    def get_kit_price_serie(self, cr, uid, product_id, serie_id, context=None):
+    def get_kit_price_serie(self,  product_id, serie_id, context=None):
         ''' Get product price from serie passed:
         '''
         res = 0.0
         component_ids = self.browse(
-            cr, uid, product_id, context=context).component_ids
+             product_id, context=context).component_ids
         for cmpt in component_ids:
             cmpt_serie_id = cmpt.metel_serie_id.id
             if not cmpt_serie_id or cmpt_serie_id != serie_id:
                 res += cmpt.qty * cmpt.lst_price # TODO use pricelist
         return res
         
-    def extract_check_report_xlsx(self, cr, uid, ids, context=None):
+    def extract_check_report_xlsx(self,  ids, context=None):
         ''' Report for check kit definition
         '''
         # Pool used:
@@ -92,7 +92,7 @@ class ProductProduct(orm.Model):
         # ---------------------------------------------------------------------
         # Collect data:
         # ---------------------------------------------------------------------
-        current_proxy = self.browse(cr, uid, ids, context=context)[0]
+        current_proxy = self.browse( ids, context=context)[0]
         brand_db = {} # NOTE: False >> common part
         title = []        
         col_width = [
@@ -194,13 +194,13 @@ class ProductProduct(orm.Model):
             col += col_common # Start position
             
         return excel_pool.return_attachment(
-            cr, uid, name='KIT Check', name_of_file='kit_check.xlsx') 
+             name='KIT Check', name_of_file='kit_check.xlsx')
         
-    def _check_kit_variant(self, cr, uid, ids, fields, args, context=None):
+    def _check_kit_variant(self,  ids, fields, args, context=None):
         ''' Fields function for calculate 
         '''
         res = {}
-        for item in self.browse(cr, uid, ids, context=context):
+        for item in self.browse( ids, context=context):
             res[item.id] = ''
             check_tot = item.kit_variant
             if not check_tot:

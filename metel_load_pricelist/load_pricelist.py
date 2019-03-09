@@ -38,7 +38,7 @@ class MetelBase(orm.Model):
     
     _inherit = 'metel.parameter'
     
-    def schedule_import_pricelist_action(self, cr, uid, verbose=True, 
+    def schedule_import_pricelist_action(self,  verbose=True, 
             context=None):
         ''' Schedule import of pricelist METEL
         '''
@@ -50,8 +50,8 @@ class MetelBase(orm.Model):
         # Read parameter
         # --------------------------------------------------------------------- 
         # Database parameters:
-        param_ids = self.search(cr, uid, [], context=context)
-        param_proxy = self.browse(cr, uid, param_ids, context=context)[0]
+        param_ids = self.search( [], context=context)
+        param_proxy = self.browse( param_ids, context=context)[0]
 
         # 3 folder used:
         data_folder = os.path.expanduser(param_proxy.root_data_folder)
@@ -66,7 +66,7 @@ class MetelBase(orm.Model):
         if electrocod_code and electrocod_start_char and electrocod_file:
             electrocod_file = os.path.expanduser(electrocod_file)
             electrocod_db = category_pool.scheduled_electrocod_import_data(
-                cr, uid, 
+                 
                 filename=electrocod_file, 
                 root_name=electrocod_code, 
                 ec_check=electrocod_start_char, 
@@ -79,7 +79,7 @@ class MetelBase(orm.Model):
                 product created)''')
         # If not fount Code category (new code) use a missed one!        
         missed_id = category_pool.get_electrocod_category(
-            cr, uid, code='NOTFOUND', context=context)        
+             code='NOTFOUND', context=context)        
                 
         # Now for name log:
         now = '%s' % datetime.now()
@@ -96,8 +96,8 @@ class MetelBase(orm.Model):
             ]
         
         # Currency database:    
-        currency_db = self.load_parse_text_currency(cr, uid, context=context)
-        uom_db = self.load_parse_text_uom(cr, uid, context=context)
+        currency_db = self.load_parse_text_currency( context=context)
+        uom_db = self.load_parse_text_uom( context=context)
         
         # --------------------------------------------------------------------- 
         # Import procecedure:
@@ -114,7 +114,7 @@ class MetelBase(orm.Model):
                 # TODO version?
                 currency = (filename.split('.')[0])[6:]
                 metel_producer_id = category_pool.get_create_producer_group(
-                    cr, uid, file_producer_code, file_producer_code,
+                     file_producer_code, file_producer_code,
                     context=context)
                 fullname = os.path.join(root, filename)                
 
@@ -225,7 +225,7 @@ class MetelBase(orm.Model):
                         else:
                             metel_brand_id = \
                                 category_pool.get_create_brand_group(
-                                    cr, uid, file_producer_code, brand_code, 
+                                     file_producer_code, brand_code, 
                                     brand_code, 
                                     # name = code (modify in anagraphic)
                                     context=context)
@@ -279,7 +279,7 @@ class MetelBase(orm.Model):
                         # -----------------------------------------------------
                         # Update database:
                         # -----------------------------------------------------
-                        product_ids = product_pool.search(cr, uid, [
+                        product_ids = product_pool.search( [
                              ('default_code','=', default_code),
                              ('metel_brand_code', '=', brand_code),
                              ], context=context)
@@ -287,7 +287,7 @@ class MetelBase(orm.Model):
                         if product_ids: 
                             try:
                                 product_pool.write(
-                                    cr, uid, product_ids, data, 
+                                     product_ids, data, 
                                     context=context)
                             except:
                                 logger.append(
@@ -300,7 +300,7 @@ class MetelBase(orm.Model):
                         else:        
                             try:
                                 product_pool.create(
-                                    cr, uid, data, context=context)
+                                     data, context=context)
                             except:
                                 logger.append(
                                     _('Error updating: %s' % default_code))
@@ -338,13 +338,13 @@ class MetelBase(orm.Model):
                         else:
                             metel_brand_id = \
                                 category_pool.get_create_brand_group(
-                                    cr, uid, file_producer_code, brand_code, 
+                                     file_producer_code, brand_code, 
                                     brand_code, context=context)
                         
                         # -----------------------------------------------------
                         # Crete or get statistic/discount category:            
                         # -----------------------------------------------------
-                        category_ids = category_pool.search(cr, uid, [
+                        category_ids = category_pool.search( [
                             ('parent_id', '=', metel_brand_id),
                             (field, '=', metel_code),
                             ], context=context)
@@ -357,15 +357,15 @@ class MetelBase(orm.Model):
                         if category_ids:
                             metel_code_id = category_ids[0]    
                             category_pool.write(
-                                cr, uid, category_ids, data, context=context)
+                                 category_ids, data, context=context)
                         else:
                             metel_code_id = category_pool.create(
-                                cr, uid, data, context=context)
+                                 data, context=context)
                                 
                         # -----------------------------------------------------
                         # Update product of this category with serie:
                         # -----------------------------------------------------
-                        product_ids = product_pool.search(cr, uid, [
+                        product_ids = product_pool.search( [
                             ('metel_producer_code', '=', producer_code),
                             ('metel_brand_code', '=', brand_code),                            
                             (field, '=', metel_code),
@@ -377,12 +377,12 @@ class MetelBase(orm.Model):
                         # Update series fron statistic (if FST)
                         if file_mode_code == 'FST':
                             metel_statistic_proxy = category_pool.browse(
-                                cr, uid, metel_code_id, context=context)
+                                 metel_code_id, context=context)
                             if metel_statistic_proxy.metel_serie_id:
                                 data['metel_serie_id'] = \
                                     metel_statistic_proxy.metel_serie_id.id
     
-                        product_pool.write(cr, uid, product_ids, data, 
+                        product_pool.write( product_ids, data, 
                             context=context)    
 
                         if verbose:

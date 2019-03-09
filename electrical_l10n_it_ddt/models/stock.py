@@ -216,7 +216,7 @@ class StockPicking(models.Model):
 
 
     def action_invoice_create(
-            self, cr, uid, ids, journal_id, group=False, type='out_invoice',
+            self,  ids, journal_id, group=False, type='out_invoice',
             context=None):
         ''' Action for create invoice from pickings (or DDT > pick > invoice)
             Note: Inherit Append DDT extra data
@@ -225,7 +225,7 @@ class StockPicking(models.Model):
             context = {}
         invoice_obj = self.pool['account.invoice']
         res = super(StockPicking, self).action_invoice_create(
-            cr, uid, ids, journal_id, group, type, context)
+             ids, journal_id, group, type, context)
             
         # TODO Use only first element?
         note_pre = ''
@@ -233,7 +233,7 @@ class StockPicking(models.Model):
         note_post = ''
         note_post_list = []
         destination_partner_id = False
-        for picking in self.browse(cr, uid, ids, context=context):
+        for picking in self.browse( ids, context=context):
             # Pre pick + DDT (if exist)
             pre_all = (picking.ddt_text_note_pre or '').strip() or (
                 picking.text_note_pre or '').strip()
@@ -254,7 +254,7 @@ class StockPicking(models.Model):
                 destination_partner_id = picking.destination_partner_id.id
             if destination_partner_id != picking.destination_partner_id.id:
                 raise osv.except_osv(_('Error'), _('Different destination!'))
-            invoice_obj.write(cr, uid, res, {                
+            invoice_obj.write( res, {                
                 # DDT fields:
                 'destination_partner_id':
                 picking.destination_partner_id and
@@ -274,7 +274,7 @@ class StockPicking(models.Model):
                 picking.transportation_method_id.id,
                 'parcels': picking.parcels,                
             })
-        invoice_obj.write(cr, uid, res, {
+        invoice_obj.write( res, {
             'text_note_pre': note_pre,
             'text_note_post': note_post,            
             })            
